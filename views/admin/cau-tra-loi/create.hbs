@@ -1,0 +1,242 @@
+{{!-- views/admin/cau-tra-loi/create.hbs --}}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Thêm Câu trả lời Mới</h3>
+            </div>
+            <div class="card-body">
+                <form action="/admin/cau-tra-loi/create" method="POST" id="answerForm">
+                    <div class="form-group">
+                        <label for="cauHoiId">Câu hỏi</label>
+                        <select class="form-control select2" id="cauHoiId" name="cauHoiId" required>
+                            <option value="">Chọn câu hỏi</option>
+                            {{#each cauHois}}
+                            <option value="{{this.id}}">[{{this.id}}]: {{this.noi_dung}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div id="answersContainer" class="accordion">
+                        <div class="answer-item card">
+                            <div class="card-header p-2" id="heading0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse0" aria-expanded="true" aria-controls="collapse0">
+                                            Câu trả lời #1 <i class="fas fa-check-circle text-danger status-icon" data-toggle="tooltip" title="Chưa điền đủ thông tin"></i>
+                                        </button>
+                                    </h2>
+                                    <button type="button" class="btn btn-danger btn-sm remove-answer">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="collapse0" class="collapse show" aria-labelledby="heading0" data-parent="#answersContainer">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label>Nội dung câu trả lời</label>
+                                        <textarea class="form-control" name="answers[0][noiDung]" rows="2" required placeholder="Nhập nội dung câu trả lời..."></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Điểm</label>
+                                        <input type="number" class="form-control" name="answers[0][diem]" min="0" max="10" step="0.1" required placeholder="Nhập điểm từ 0-10">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Ghi chú</label>
+                                        <textarea class="form-control" name="answers[0][ghiChu]" rows="1" placeholder="Nhập ghi chú (nếu có)..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <button type="button" class="btn btn-success" id="addAnswer">
+                            <i class="fas fa-plus"></i> Thêm câu trả lời
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                        <a href="/admin/cau-tra-loi" class="btn btn-secondary">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Debug data
+        console.log('cauHois data:', {{{json cauHois}}});
+        
+        $('.select2').select2({
+            theme: 'bootstrap4'
+        });
+
+        // Initialize tooltips
+        $('[data-toggle="tooltip"]').tooltip();
+
+        let answerCount = 1;
+
+        function validateAnswer(answerItem) {
+            const noiDung = answerItem.find('textarea[name$="[noiDung]"]').val();
+            const diem = answerItem.find('input[name$="[diem]"]').val();
+            const statusIcon = answerItem.find('.status-icon');
+            
+            if (noiDung && diem) {
+                statusIcon.removeClass('text-danger').addClass('text-success');
+                statusIcon.attr('title', 'Đã điền đủ thông tin');
+            } else {
+                statusIcon.removeClass('text-success').addClass('text-danger');
+                statusIcon.attr('title', 'Chưa điền đủ thông tin');
+            }
+            // Update tooltip
+            statusIcon.tooltip('dispose').tooltip();
+        }
+
+        // Validate all answers on input change
+        $(document).on('input', 'textarea[name$="[noiDung]"], input[name$="[diem]"]', function() {
+            validateAnswer($(this).closest('.answer-item'));
+        });
+
+        // Initial validation
+        $('.answer-item').each(function() {
+            validateAnswer($(this));
+        });
+
+        function updateAnswerNumbers() {
+            $('.answer-item').each(function(index) {
+                const newIndex = index;
+                const button = $(this).find('.btn-link');
+                const collapseId = `collapse${newIndex}`;
+                const headingId = `heading${newIndex}`;
+                
+                // Update button text and attributes
+                button.text(`Câu trả lời #${newIndex + 1} `);
+                button.append('<i class="fas fa-check-circle text-danger status-icon" data-toggle="tooltip" title="Chưa điền đủ thông tin"></i>');
+                button.attr('data-target', `#${collapseId}`);
+                button.attr('aria-controls', collapseId);
+                
+                // Update collapse div
+                const collapseDiv = $(this).find('.collapse');
+                collapseDiv.attr('id', collapseId);
+                collapseDiv.attr('aria-labelledby', headingId);
+                
+                // Update heading
+                $(this).find('.card-header').attr('id', headingId);
+                
+                // Update input names
+                $(this).find('textarea[name^="answers["]').attr('name', `answers[${newIndex}][noiDung]`);
+                $(this).find('input[name^="answers["]').attr('name', `answers[${newIndex}][diem]`);
+                $(this).find('textarea[name^="answers["]').last().attr('name', `answers[${newIndex}][ghiChu]`);
+            });
+        }
+
+        $('#addAnswer').click(function() {
+            const currentCount = $('.answer-item').length;
+            const newAnswer = `
+                <div class="answer-item card">
+                    <div class="card-header p-2" id="heading${currentCount}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse${currentCount}" aria-expanded="true" aria-controls="collapse${currentCount}">
+                                    Câu trả lời #${currentCount + 1} <i class="fas fa-check-circle text-danger status-icon" data-toggle="tooltip" title="Chưa điền đủ thông tin"></i>
+                                </button>
+                            </h2>
+                            <button type="button" class="btn btn-danger btn-sm remove-answer">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="collapse${currentCount}" class="collapse show" aria-labelledby="heading${currentCount}" data-parent="#answersContainer">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Nội dung câu trả lời</label>
+                                <textarea class="form-control" name="answers[${currentCount}][noiDung]" rows="2" required placeholder="Nhập nội dung câu trả lời..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Điểm</label>
+                                <input type="number" class="form-control" name="answers[${currentCount}][diem]" min="0" max="10" step="0.1" required placeholder="Nhập điểm từ 0-10">
+                            </div>
+                            <div class="form-group">
+                                <label>Ghi chú</label>
+                                <textarea class="form-control" name="answers[${currentCount}][ghiChu]" rows="1" placeholder="Nhập ghi chú (nếu có)..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            $('#answersContainer').append(newAnswer);
+            answerCount++;
+        });
+
+        $(document).on('click', '.remove-answer', function() {
+            $(this).closest('.answer-item').remove();
+            updateAnswerNumbers();
+        });
+
+        // Add form submit handler to log data
+        $('#answerForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Convert FormData to object
+            for (let [key, value] of formData.entries()) {
+                if (key.includes('[')) {
+                    // Handle nested arrays
+                    const matches = key.match(/answers\[(\d+)\]\[(\w+)\]/);
+                    if (matches) {
+                        const [, index, field] = matches;
+                        if (!data.answers) data.answers = [];
+                        if (!data.answers[index]) data.answers[index] = {};
+                        data.answers[index][field] = value;
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+
+            // Validate required fields
+            let isValid = true;
+            let errorMessage = '';
+
+            // Check if question is selected
+            if (!data.cauHoiId) {
+                isValid = false;
+                errorMessage = 'Vui lòng chọn câu hỏi';
+            }
+
+            // Check if there are any answers
+            if (!data.answers || data.answers.length === 0) {
+                isValid = false;
+                errorMessage = 'Vui lòng thêm ít nhất một câu trả lời';
+            }
+
+            // Check each answer
+            if (data.answers) {
+                data.answers.forEach((answer, index) => {
+                    if (!answer.noiDung || !answer.diem) {
+                        isValid = false;
+                        errorMessage = `Vui lòng điền đầy đủ thông tin cho câu trả lời #${index + 1}`;
+                    }
+                });
+            }
+
+            if (!isValid) {
+                alert(errorMessage);
+                return;
+            }
+
+            // Log the data
+            console.log('Form data to be submitted:', data);
+            
+            // Submit the form
+            this.submit();
+        });
+    });
+</script> 

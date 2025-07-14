@@ -1,0 +1,71 @@
+/* Stepper Styles */
+.stepper-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.stepper-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e0e0e0;
+    z-index: 1;
+}
+
+.stepper-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    z-index: 2;
+}
+
+.step-counter {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    margin-bottom: 6px;
+    position: relative;
+}
+
+.step-name {
+    color: #707070;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Active Step */
+.stepper-item.active .step-counter {
+    background-color: #28a745;
+    border: none;
+}
+
+.stepper-item.active .step-name {
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* Completed Step */
+.stepper-item.completed .step-counter {
+    background-color: #808080;
+}
+
+.stepper-item.completed .step-name {
+    color: #808080;
+}
+
+/* First Step */
+.stepper-item:first-child.active .step-counter {
+    background-color: #28a745;
+}
+
+.stepper-item:first-child.active .step-name {
+    color: #28a745;
+} 

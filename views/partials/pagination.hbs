@@ -1,0 +1,53 @@
+{{#if pagination}}
+<div class="row py-3 px-3">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <span class="mr-2">Hiển thị</span>
+                <select class="form-control form-control-sm mx-2" style="width: auto;" onchange="window.location.href='{{baseUrl}}?page=1&limit=' + this.value + '{{#if search}}&search={{search}}{{/if}}'">
+                    <option value="5" {{#if (eq pagination.limit 5)}}selected{{/if}}>5</option>
+                    <option value="10" {{#if (eq pagination.limit 10)}}selected{{/if}}>10</option>
+                    <option value="25" {{#if (eq pagination.limit 25)}}selected{{/if}}>25</option>
+                    <option value="50" {{#if (eq pagination.limit 50)}}selected{{/if}}>50</option>
+                    <option value="100" {{#if (eq pagination.limit 100)}}selected{{/if}}>100</option>
+                </select>
+                <span class="ml-2">bản ghi</span>
+                <span class="ml-3">
+                    (Đang xem từ bản ghi {{add (multiply (subtract pagination.currentPage 1) pagination.limit) 1}} đến 
+                    {{#if (lt (multiply pagination.currentPage pagination.limit) pagination.total)}}
+                        {{multiply pagination.currentPage pagination.limit}}
+                    {{else}}
+                        {{pagination.total}}
+                    {{/if}} 
+                    của tổng số {{pagination.total}} bản ghi)
+                </span>
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination mb-0">
+                    {{#if (gt pagination.currentPage 1)}}
+                    <li class="page-item">
+                        <a class="page-link" href="{{baseUrl}}?page={{subtract pagination.currentPage 1}}&limit={{pagination.limit}}{{#if search}}&search={{search}}{{/if}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {{/if}}
+                    
+                    {{#times pagination.totalPages}}
+                    <li class="page-item {{#if (eq this ../pagination.currentPage)}}active{{/if}}">
+                        <a class="page-link" href="{{../baseUrl}}?page={{this}}&limit={{../pagination.limit}}{{#if ../search}}&search={{../search}}{{/if}}">{{this}}</a>
+                    </li>
+                    {{/times}}
+                    
+                    {{#if (lt pagination.currentPage pagination.totalPages)}}
+                    <li class="page-item">
+                        <a class="page-link" href="{{baseUrl}}?page={{add pagination.currentPage 1}}&limit={{pagination.limit}}{{#if search}}&search={{search}}{{/if}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {{/if}}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+{{/if}} 

@@ -1,0 +1,50 @@
+{{> header}}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Kết quả bài trắc nghiệm</h2>
+                </div>
+                <div class="card-body">
+                    <h3>{{quiz.title}}</h3>
+                    
+                    <div class="alert alert-info">
+                        <div class="d-flex justify-content-between">
+                            <span>Thời gian làm bài: {{result.timeSpent}} phút</span>
+                            <span>Điểm số: {{result.score}}/{{result.totalQuestions}}</span>
+                        </div>
+                    </div>
+
+                    <h4 class="mt-4">Chi tiết bài làm</h4>
+                    {{#each questions}}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Câu {{@index}}: {{this.question}}</h5>
+                                <div class="list-group">
+                                    {{#each this.options}}
+                                        <div class="list-group-item {{#if (eq @index ../correctAnswer)}}list-group-item-success{{else if (eq @index ../userAnswer)}}list-group-item-danger{{/if}}">
+                                            {{this}}
+                                            {{#if (eq @index ../correctAnswer)}}
+                                                <span class="badge bg-success float-end">Đáp án đúng</span>
+                                            {{else if (eq @index ../userAnswer)}}
+                                                <span class="badge bg-danger float-end">Đáp án của bạn</span>
+                                            {{/if}}
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+
+                    <div class="text-center mt-4">
+                        <a href="/trac-nghiem" class="btn btn-primary">Quay lại danh sách</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> footer}} 

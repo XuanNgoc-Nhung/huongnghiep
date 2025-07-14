@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Web Hướng Nghiệp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+        }
+        .auth-container {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            margin: 20px;
+        }
+        .auth-form {
+            flex: 1;
+            padding: 20px 40px;
+        }
+        .auth-image {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .auth-image img {
+            max-width: 100%;
+            height: auto;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .logo span {
+            font-size: 20px;
+            color: #45a049;
+            font-weight: 600;
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .el-input__inner {
+            height: 44px !important;
+            border-radius: 8px !important;
+        }
+        .el-form-item {
+            margin-bottom: 20px !important;
+        }
+        .btn-auth {
+            width: 100%;
+            height: 44px;
+            background: #4CAF50;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-auth:hover {
+            background: #45a049;
+        }
+        .form-label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 0;
+        }
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+            .auth-image {
+                display: none;
+            }
+            .auth-form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container" id="app">
+        <div class="auth-form">
+            <div class="logo">
+                <img src="/images/logo.svg" alt="CareerTest">
+            </div>
+            {{{body}}}
+        </div>
+        <div class="auth-image">
+            <img src="/images/login-right.svg" alt="Auth Illustration">
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/umd/locale/vi.js"></script>
+    <script>
+        ELEMENT.locale(ELEMENT.lang.vi)
+    </script>
+</body>
+</html> 

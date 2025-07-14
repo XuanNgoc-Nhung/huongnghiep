@@ -1,0 +1,1060 @@
+<div class="container mt-2 bg-light rounded-4">
+    {{> buoc-trac-nghiem currentStep=6}}
+    {{!-- Tabs kết quả --}}
+    <div class="custom-switch-tabs mb-4">
+        <button class="switch-tab active" data-tab="kqTracNghiem" id="kqTracNghiem" type="button">Kết quả trắc
+            nghiệm</button>
+        <button class="switch-tab" data-tab="nganhUocMo" id="nganhUocMo" type="button">Ngành học ước mơ</button>
+        <button class="switch-tab" data-tab="khaoSatCaNhan" id="khaoSatCaNhan" type="button">Khảo sát cá nhân</button>
+    </div>
+    <div class="tab-content-custom">
+        <div class="tab-pane-custom show" id="tab-kqTracNghiem">
+            {{!-- Kết quả --}}
+            <div class="bg-white rounded-4 p-4 p-md-5">
+                <div class="tabs1">
+                    <h1 class="h3 mb-0">🎉 Kết quả trắc nghiệm của bạn</h1>
+                    <div class="mb-2 mt-2">Tổng điểm theo từng nhóm ngành:</div>
+                    <div class="d-flex align-items-center gap-2 mb-4 kq-nganh">
+                        <div class="mb-4 w-100" style="background: #f8f9fa; border-radius: 16px;">
+                            <div class="overflow-auto"
+                                style="min-height: 300px; width: 100%; display: flex; justify-content: center; align-items: center;">
+                                <div style="min-width: 600px; width: 100%; height: 400px;" class="chart-container">
+                                    <canvas id="nganhRadarChart" style="width: 100%; height: 100%;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- section 2 --}}
+                    <div class="row mt-4 align-items-stretch">
+                        <!-- Bảng xếp hạng nhóm ngành -->
+                        <div class="col-md-7 mb-4 h-100">
+                            <div class="h-100 d-flex flex-column justify-content-center"
+                                style="background: #f8f9fa; border-radius: 16px;">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col" class="text-center">Xếp hạng</th>
+                                                <th scope="col">Nhóm ngành</th>
+                                                <th scope="col">Điểm của bạn</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="table-success">
+                                                <td class="text-center">1</td>
+                                                <td>
+                                                    Kinh doanh & Quản lý<br>
+                                                    <span class="text-muted small">(Business & Management)</span>
+                                                </td>
+                                                <td>37 điểm</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">2</td>
+                                                <td>
+                                                    Kỹ thuật & Công nghệ<br>
+                                                    <span class="text-muted small">(Engineering & Technology)</span>
+                                                </td>
+                                                <td>34 điểm</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">3</td>
+                                                <td>
+                                                    Nghệ thuật & Sáng tạo<br>
+                                                    <span class="text-muted small">(Arts & Creativity)</span>
+                                                </td>
+                                                <td>31 điểm</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">4</td>
+                                                <td>
+                                                    Khoa học & Nghiên cứu<br>
+                                                    <span class="text-muted small">(Science & Research)</span>
+                                                </td>
+                                                <td>28 điểm</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">5</td>
+                                                <td>
+                                                    Quân đội, Công an, Hàng không<br>
+                                                    <span class="text-muted small">(Military, Police & Aviation)</span>
+                                                </td>
+                                                <td>26 điểm</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">6</td>
+                                                <td>
+                                                    Giáo dục & Công tác xã hội<br>
+                                                    <span class="text-muted small">(Education & Social Work)</span>
+                                                </td>
+                                                <td>22 điểm</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Huy chương nhóm ngành cao nhất -->
+                        <div class="col-md-5 d-flex align-items-center justify-content-center h-100">
+                            <div class="w-100 text-center h-100 d-flex flex-column justify-content-center"
+                                style="background: #f8f9fa; border-radius: 16px; padding: 24px;">
+                                <!-- SVG huy chương và nội dung giữ nguyên -->
+                                <div style="font-weight: bold; font-size: 20px; margin-bottom: 8px;">Nhóm ngành có điểm
+                                    cao nhất
+                                </div>
+                                <hr style="margin: 0 auto 24px auto; width: 90%; border-top: 1.5px solid #000000;">
+                                <div style="display: flex; flex-direction: column; align-items: center;">
+                                    <svg width="160" height="180" viewBox="0 0 160 180" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <!-- Ribbon -->
+                                        <rect x="48" y="120" width="20" height="50" rx="8" fill="#4F46E5" />
+                                        <rect x="92" y="120" width="20" height="50" rx="8" fill="#EF4444" />
+                                        <rect x="70" y="120" width="20" height="50" rx="8" fill="#fff" />
+                                        <!-- Medal -->
+                                        <circle cx="80" cy="80" r="70" fill="#FFD700" stroke="#F7B500"
+                                            stroke-width="8" />
+                                        <circle cx="80" cy="80" r="58" fill="#FFEB99" />
+                                        <!-- Medal border effect -->
+                                        <ellipse cx="80" cy="80" rx="54" ry="54" fill="#FFE066" />
+                                        <!-- Score -->
+                                        <text x="80" y="95" text-anchor="middle" font-size="56" font-weight="bold"
+                                            fill="#A97B1C" font-family="inherit">37</text>
+                                        <text x="80" y="120" text-anchor="middle" font-size="18" font-weight="bold"
+                                            fill="#A97B1C" font-family="inherit">điểm</text>
+                                    </svg>
+                                    <div class="mt-4 fw-bold" style="color: #2563eb; font-size: 22px;">Kinh doanh & Quản
+                                        lý
+                                    </div>
+                                    <div style="color: #2563eb; font-size: 16px; font-weight: 500;">(Business &
+                                        Management)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- section 3 --}}
+                    <div class="row mt-5">
+                        <div class="col-12 d-flex flex-column">
+                            <div class="fw-bold mb-3" style="font-size: 22px; display: flex; gap: 8px;">
+                                <span style="font-size: 20px;">🎯</span> Nhóm ngành nghề phù hợp với bạn
+                            </div>
+                            <div class="hexagon-career d-flex flex-column align-items-center justify-content-center">
+                                <img src="/images/svg/business-management.svg" alt="Business & Management"
+                                    style="width: 90px; margin-bottom: 12px;" />
+                                <div class="fw-bold" style="color: #fff; font-size: 18px;">Kinh doanh & Quản lý</div>
+                                <div style="color: #fff; font-size: 15px;">(Business & Management)</div>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- section 4 --}}
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <div class="rounded-4 p-4 p-md-5 d-flex flex-column gap-3"
+                                style="background: #f8f9ff; border: 1.5px solid #e0e7ef;">
+                                <table class="table align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 28%; font-weight: 600;">Nhóm ngành phù hợp với bạn</th>
+                                            <th style="width: 14%; font-weight: 600;">Điểm của bạn</th>
+                                            <th style="width: 58%; font-weight: 600;">Mô tả</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div style="font-weight: 600;">Kinh doanh & Quản lý<br><span
+                                                        class="text-muted small">(Business & Management)</span></div>
+                                            </td>
+                                            <td>
+                                                <span style="font-weight: 600; font-size: 18px; color: #5EB47C;">37
+                                                    điểm</span>
+                                            </td>
+                                            <td>
+                                                <div style="font-weight: 600; margin-bottom: 6px;">Yêu cầu phù hợp:
+                                                </div>
+                                                <ul style="margin-bottom: 8px; padding-left: 18px;">
+                                                    <li>Khả năng lãnh đạo: Cần có khả năng quản lý đội nhóm, ra quyết
+                                                        định, và điều phối công việc hiệu quả.</li>
+                                                    <li>Kỹ năng giao tiếp: Có khả năng giao tiếp tốt, thuyết phục và tạo
+                                                        mối quan hệ trong môi trường công việc.</li>
+                                                    <li>Tư duy chiến lược và tổ chức: Năng lực phân tích, lập kế hoạch
+                                                        và tổ chức công việc để đạt được mục tiêu dài hạn.</li>
+                                                    <li>Tinh thần khởi nghiệp & đổi mới: Sự sáng tạo và dám đổi mới
+                                                        trong kinh doanh.</li>
+                                                    <li>Kỹ năng giải quyết vấn đề: Khả năng đưa ra giải pháp cho các vấn
+                                                        đề kinh doanh, tài chính và nhân sự.</li>
+                                                </ul>
+                                                <div style="font-weight: 600; margin-bottom: 6px;">Phù hợp với học sinh
+                                                    có:</div>
+                                                <ul style="padding-left: 18px;">
+                                                    <li>Tính cách quyết đoán, mạnh mẽ, sáng tạo và yêu thích sự đổi mới.
+                                                    </li>
+                                                    <li>Khả năng làm việc nhóm và xây dựng mối quan hệ tốt với người
+                                                        khác.</li>
+                                                    <li>Sự quan tâm đến việc tạo ra giá trị và phát triển kinh doanh.
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- section 5 --}}
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <div class="rounded-4 d-flex flex-column gap-3">
+                                <div class="d-flex align-items-center gap-2 mb-2"
+                                    style="font-size: 28px; font-weight: 700; color: #222;">
+                                    <span style="font-size: 32px;">🎯</span> Tiếp theo, bạn nên làm gì?
+                                </div>
+                                <div style="font-size: 18px; color: #222; font-weight: 500; margin-bottom: 8px;">
+                                    <span style="font-size: 22px;">👉</span> Chọn ngành cụ thể trong nhóm "Kinh doanh &
+                                    Quản lý" để:
+                                </div>
+                                <ul style="font-size: 17px; color: #222; margin-left: 32px;">
+                                    <li>Xem danh sách các trường đại học đào tạo chuyên ngành.</li>
+                                    <li>So sánh chỉ tiêu tuyển sinh năm gần nhất, Phương thức xét tuyển và điểm chuẩn
+                                        đầu vào các chuyên ngành.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end gap-2 mt-5">
+                    <a href="/trac-nghiem/bat-dau" class="btn btn-outline-secondary px-4">Quay lại</a>
+                    <button class="btn btn-success px-4" onclick="document.getElementById('nganhUocMo').click()">Tiếp
+                        tục</button>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane-custom" id="tab-nganhUocMo">
+            <!-- Header cho FAQ -->
+            <div class="faq-header">
+                Kinh doanh & quản lý
+                <div class="faq-header-sub">(Business & Management)</div>
+            </div>
+            <!-- Nội dung tab Ngành học ước mơ -->
+            <div class="">
+                <div class="faq-section mx-auto" style="max-width: 600px;">
+                    {{#each faqItems}}
+                    <!-- FAQ Item -->
+                    <div class="faq-item mb-2 p-2 rounded-3" style="background: #f3f7ff;">
+                        <div class="faq-question fw-bold mb-2 faq-toggle" style="font-size: 18px; cursor:pointer;">
+                            {{this.question}}</div>
+                        <div class="faq-options mb-2" id="faq-options-{{this.id}}" style="display:none;">
+                            {{#each this.options}}
+                            <div class="form-check">
+                                <input class="form-check-input faq-radio" type="radio" name="faq{{../id}}"
+                                    id="faq-{{../id}}-{{this.value}}" value="{{this.value}}" data-faq="{{../id}}">
+                                <label class="form-check-label"
+                                    for="faq-{{../id}}-{{this.value}}">{{this.label}}</label>
+                            </div>
+                            {{/each}}
+                        </div>
+                        <div class="faq-answer" id="faq-answer-{{this.id}}" style="display:none;"></div>
+                    </div>
+                    {{/each}}
+                </div>
+                <script>
+                    // Đáp án mẫu cho từng radio
+                    const faqAnswers = {
+                        {{#each faqItems}}
+                        "{{this.id}}": {
+                            {{#each this.answers}}
+                            "{{this.value}}": `{{{this.html}}}`,
+                            {{/each}}
+                        },
+                        {{/each}}
+                    };
+
+                    // Toggle hiển thị đáp án khi click vào câu hỏi
+                    document.querySelectorAll('.faq-toggle').forEach(function (q) {
+                        q.addEventListener('click', function () {
+                            const faqItem = this.closest('.faq-item');
+                            const faqId = faqItem.querySelector('.faq-options').id.split('-')[2];
+                            const options = document.getElementById('faq-options-' + faqId);
+                            const answer = document.getElementById('faq-answer-' + faqId);
+                            
+                            // Toggle hiển thị options
+                            if (options.style.display === 'none' || options.style.display === '') {
+                                options.style.display = 'block';
+                            } else {
+                                options.style.display = 'none';
+                                // Ẩn câu trả lời khi đóng options
+                                answer.style.display = 'none';
+                            }
+                        });
+                    });
+
+                    // Hiện câu trả lời khi chọn đáp án
+                    document.querySelectorAll('.faq-radio').forEach(function (radio) {
+                        radio.addEventListener('change', function () {
+                            const faqId = this.getAttribute('data-faq');
+                            const value = this.value;
+                            const answerDiv = document.getElementById('faq-answer-' + faqId);
+                            const optionsDiv = document.getElementById('faq-options-' + faqId);
+
+                            // Reset tất cả các câu trả lời khác
+                            document.querySelectorAll('.faq-answer').forEach(answer => {
+                                answer.style.display = 'none';
+                            });
+
+                            // Reset tất cả các radio buttons khác trong cùng nhóm
+                            const currentOptions = this.closest('.faq-options');
+                            currentOptions.querySelectorAll('.faq-radio').forEach(otherRadio => {
+                                if (otherRadio !== this) {
+                                    otherRadio.checked = false;
+                                }
+                            });
+
+                            // Ẩn danh sách câu trả lời
+                            optionsDiv.style.display = 'none';
+
+                            // Hiển thị câu trả lời nếu có
+                            if (faqAnswers[faqId] && faqAnswers[faqId][value]) {
+                                answerDiv.innerHTML = faqAnswers[faqId][value];
+                                answerDiv.style.display = 'block';
+                            } else {
+                                answerDiv.innerHTML = '';
+                                answerDiv.style.display = 'none';
+                            }
+                        });
+                    });
+                </script>
+                <!-- Bảng dữ liệu các trường đại học đào tạo ngành Quản trị kinh doanh -->
+                <div class="mt-4" style="background: #f8f9fa; border-radius: 16px; padding: 24px;">
+                    <div style="font-weight: bold; font-size: 18px; margin-bottom: 16px;">
+                        <span style="font-size: 20px;">📋</span> Danh sách các trường đại học, học viện đào tạo chuyên
+                        ngành
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle mb-0 table-university">
+                            <thead class="table-light">
+                                <tr>
+                                    <th rowspan="2">Tên trường</th>
+                                    <th rowspan="2">Ngành đào tạo</th>
+                                    <th rowspan="2">Chỉ tiêu [{{latestYear}}]</th>
+                                    <th rowspan="2">Phương thức xét tuyển</th>
+                                    <th colspan="{{years.length}}" class="text-center">Điểm chuẩn</th>
+                                    <th rowspan="2"></th>
+                                </tr>
+                                <tr>
+                                    {{#each years}}
+                                    <th>{{this}}</th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each universityList}}
+                                <tr>
+                                    <td>{{this.name}}</td>
+                                    <td>{{this.major}}</td>
+                                    <td>{{this.quota}}</td>
+                                    <td>{{this.method}}</td>
+                                    {{#each this.scores}}
+                                    <td>{{this.value}}</td>
+                                    {{/each}}
+                                    <td><a href="{{this.detailUrl}}">Xem chi tiết</a></td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Section hướng dẫn khảo sát cá nhân -->
+                <div class="mt-4"
+                    style="background: #fffbe7; border-radius: 16px; padding: 28px 24px 20px 24px; border: 1.5px solid #ffe066; box-shadow: 0 2px 8px 0 rgba(255, 215, 0, 0.06);">
+                    <div class="d-flex align-items-center gap-2 mb-2"
+                        style="font-size: 26px; font-weight: 700; color: #222;">
+                        <span style="font-size: 30px;">📝</span> Bước tiếp theo: Hoàn thành bằng khảo sát cá nhân
+                    </div>
+                    <div style="font-size: 16px; color: #222; font-weight: 500; margin-bottom: 12px; margin-top: 8px;">
+                        Để biết mình phù hợp với trường đại học nào, hãy dành 2–3 phút để hoàn thành bảng khảo sát với
+                        các thông tin sau:
+                    </div>
+                    <ul style="font-size: 16px; color: #222; margin-left: 32px; margin-bottom: 10px;">
+                        <li>✅ Điểm trung bình học bạ & kỳ thi THPT</li>
+                        <li>📍 Khu vực bạn muốn học (Bắc / Trung / Nam)</li>
+                        <li>💰 Khả năng chi trả học phí</li>
+                        <li>❤️ Tình trạng sức khỏe, ngoại hình (nếu ngành có yêu cầu đặc biệt)</li>
+                        <li>🦻 Tôn giáo (nếu muốn lọc trường phù hợp)</li>
+                    </ul>
+                    <div style="font-size: 16px; color: #222; font-weight: 500; margin-bottom: 6px;">
+                        <span style="font-size: 18px;">🥰</span> Mục tiêu: Giúp bạn xác định rõ mức độ phù hợp của từng
+                        trường để đưa ra quyết định tốt nhất!
+                    </div>
+                    <div style="font-size: 16px; color: #222; font-weight: 500;">
+                        <span style="font-size: 18px;">⭐</span> Bắt đầu khảo sát ngay để cá nhân hóa kết quả cho bạn.
+                    </div>
+                </div>
+            </div><!-- End section hướng dẫn khảo sát cá nhân -->
+            <div class="d-flex justify-content-end gap-2 mt-5 mb-5">
+                <button class="btn btn-outline-secondary px-4"
+                    onclick="document.getElementById('kqTracNghiem').click()">Quay
+                    lại</button>
+                <button class="btn btn-success px-4" onclick="document.getElementById('khaoSatCaNhan').click()">Tiếp
+                    tục</button>
+            </div>
+
+        </div>
+        <div class="tab-pane-custom" id="tab-khaoSatCaNhan">
+            <!-- Nội dung tab Khảo sát cá nhân -->
+            <div class="bg-white rounded-4 p-4 p-md-5">
+                <h2 class="mb-3" style="font-weight: 700;">📝 Bảng khảo sát cá nhân</h2>
+                <div class="mb-3" style="font-size: 15px;">
+                    <span style="font-weight: 600;">Lưu ý quan trọng khi điền thông tin:</span>
+                    <ul style="margin-bottom: 0; margin-top: 4px;">
+                        <li>Một số trường thuộc khối quân đội, an ninh, hàng không, y khoa... có yêu cầu đặc biệt về thể
+                            chất và điều kiện sức khỏe. Vì vậy, để hệ thống có thể lọc chính xác các trường phù hợp, bạn
+                            vui lòng cung cấp các:
+                            <ul>
+                                <li>Chiều cao & cân nặng: thực vụ kiểm tra tiêu chuẩn thể hình theo quy định từng trường
+                                    (ví dụ: Nam ≥ 1m65, Nữ ≥ 1m60).</li>
+                                <li>Tôn giáo: Một số trường khối an ninh, quân đội có tiêu chí riêng liên quan đến yếu
+                                    tố này.</li>
+                                <li>Bệnh lý hiện có (nếu có): Để kiểm tra điều kiện sức khỏe phù hợp với các ngành yêu
+                                    cầu đặc thù như công an, cảnh sát, quân đội, y khoa,...</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <span style="color: #888; font-size: 13px;">Thông tin bạn cung cấp chỉ phục vụ mục đích tư vấn hướng
+                        nghiệp & sẽ được bảo mật tuyệt đối. <a href="#" data-bs-toggle="modal"
+                            data-bs-target="#privacyPolicyModal">Chính sách bảo mật thông tin</a></span>
+                </div>
+                <form class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label required" for="fullName">Họ và tên</label>
+                            <input type="text" class="form-control" id="fullName" required
+                                placeholder="Vui lòng nhập họ và tên">
+                            <div class="invalid-feedback">Vui lòng nhập họ và tên của bạn</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label required" for="birthDate">Ngày tháng năm sinh</label>
+                            <input type="date" class="form-control" id="birthDate" required>
+                            <div class="invalid-feedback">Vui lòng chọn ngày tháng năm sinh</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label required" for="gender">Giới tính</label>
+                            <select class="form-select" id="gender" required>
+                                <option value="">Vui lòng chọn giới tính của bạn</option>
+                                <option>Nam</option>
+                                <option>Nữ</option>
+                                <option>Khác</option>
+                            </select>
+                            <div class="invalid-feedback">Vui lòng chọn giới tính của bạn</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label required" for="email">Địa chỉ email</label>
+                            <input type="email" class="form-control" id="email" required
+                                placeholder="Vui lòng nhập địa chỉ email">
+                            <div class="invalid-feedback">Vui lòng nhập địa chỉ email hợp lệ</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label required" for="phone">Số điện thoại</label>
+                            <input type="tel" class="form-control" id="phone" required pattern="[0-9]{10}"
+                                placeholder="Vui lòng nhập số điện thoại">
+                            <div class="invalid-feedback">Vui lòng nhập số điện thoại hợp lệ (10 chữ số)</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label required" for="password">Mật khẩu</label>
+                            <input type="password" class="form-control" id="password" required minlength="6"
+                                pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{6,}$"
+                                placeholder="Mật khẩu ít nhất có 6 ký tự, trong đó có 1 chữ cái in hoa và 1 ký tự đặc biệt">
+                            <div class="invalid-feedback">Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường,
+                                số và ký tự đặc biệt</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label required" for="score">Bảng điểm gần nhất</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="score" required min="0" max="10"
+                                    step="0.1" placeholder="Vui lòng nhập điểm">
+                                <select class="form-select" required>
+                                    <option value="">Vui lòng chọn loại điểm</option>
+                                    <option>Điểm học bạ</option>
+                                    <option>Điểm thi THPT</option>
+                                </select>
+                            </div>
+                            <div class="invalid-feedback">Vui lòng nhập điểm từ 0 đến 10 và chọn loại điểm</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label required" for="tuition">Khả năng chi trả cho 1 năm học (triệu
+                                đồng/năm)</label>
+                            <input type="number" class="form-control" id="tuition" required min="0"
+                                placeholder="Vui lòng nhập số tiền">
+                            <div class="invalid-feedback">Vui lòng nhập số tiền hợp lệ (lớn hơn 0)</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label required" for="location">Bạn muốn học ở đâu?</label>
+                            <input type="text" class="form-control" id="location" required
+                                placeholder="Vui lòng nhập tỉnh/thành bạn muốn học">
+                            <div class="invalid-feedback">Vui lòng nhập tỉnh/thành bạn muốn học</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="englishCert">Chứng chỉ Tiếng Anh</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="englishCert" pattern="[0-9]*\.?[0-9]+"
+                                    placeholder="Vui lòng nhập điểm">
+                                <select class="form-select">
+                                    <option value="">Vui lòng chọn loại chứng chỉ</option>
+                                    <option>IELTS</option>
+                                    <option>TOEFL</option>
+                                    <option>Khác</option>
+                                </select>
+                            </div>
+                            <div class="invalid-feedback">Vui lòng nhập điểm hợp lệ</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="satAct">Điểm SAT/ACT</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="satAct" min="0"
+                                    placeholder="Vui lòng nhập điểm">
+                                <select class="form-select">
+                                    <option value="">Vui lòng chọn loại điểm</option>
+                                    <option>SAT</option>
+                                    <option>ACT</option>
+                                </select>
+                            </div>
+                            <div class="invalid-feedback">Vui lòng nhập điểm hợp lệ</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="religion">Tôn giáo</label>
+                            <input type="text" class="form-control" id="religion"
+                                placeholder="Vui lòng nhập tôn giáo của bạn">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="height">Ngoại hình (chiều cao, cân nặng)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="height" min="0" max="300"
+                                    placeholder="Vui lòng nhập chiều cao">
+                                <span class="input-group-text">cm</span>
+                                <input type="number" class="form-control" id="weight" min="0" max="300"
+                                    placeholder="Vui lòng nhập cân nặng">
+                                <span class="input-group-text">kg</span>
+                            </div>
+                            <div class="invalid-feedback">Vui lòng nhập chiều cao và cân nặng hợp lệ</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="disease">Bệnh lý</label>
+                            <input type="text" class="form-control" id="disease"
+                                placeholder="Vui lòng nhập bệnh lý. Ví dụ: Cận 5 độ">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-info px-4" onclick="fillDemoData()">Điền dữ liệu demo</button>
+                        <button class="btn btn-outline-secondary px-4"
+                            onclick="document.getElementById('nganhUocMo').click()">Quay
+                            lại</button>
+                        <button type="submit" class="btn btn-success px-4">Tiếp tục</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> user/modal-privacy-policy }}
+
+<style>
+    .kq-nganh {
+        background: #f8f9fa;
+        border-radius: 16px;
+        padding: 24px;
+    }
+
+    .hexagon-career {
+        width: 260px;
+        height: 300px;
+        background: #4f8cff;
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        box-shadow: 0 4px 24px 0 rgba(79, 140, 255, 0.10);
+    }
+
+    @media (max-width: 768px) {
+        .chart-container {
+            height: 250px !important;
+        }
+
+        .kq-nganh {
+            padding: 12px;
+        }
+
+        .kq-nganh>div {
+            min-height: 300px !important;
+        }
+    }
+
+    .custom-switch-tabs {
+        display: flex;
+        background: #f3f3f3;
+        border-radius: 999px;
+        padding: 6px;
+        width: fit-content;
+        margin: 0 auto 24px auto;
+        box-shadow: 0 2px 8px 0 rgba(79, 140, 255, 0.08);
+    }
+
+    .switch-tab {
+        border: none;
+        background: transparent;
+        color: #5EB47C;
+        font-weight: 600;
+        font-size: 17px;
+        padding: 10px 32px;
+        border-radius: 999px;
+        transition: all 0.2s;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .switch-tab.active {
+        background: #5EB47C;
+        color: #fff;
+        box-shadow: 0 2px 8px 0 rgba(79, 140, 255, 0.12);
+    }
+
+    .tab-pane-custom {
+        display: none;
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        position: absolute;
+        width: 100%;
+    }
+
+    .tab-pane-custom.show {
+        display: block;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        position: relative;
+    }
+
+    /* Căn dọc văn bản bảng section 4 lên trên */
+    table th,
+    table td {
+        vertical-align: top !important;
+    }
+
+    .table>:not(caption)>*>* {
+        background: #f8f9ff !important;
+    }
+
+    /* CSS cho FAQ options */
+    .faq-options {
+        padding: 12px 16px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .faq-options .form-check {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 12px 16px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        background: #f8f9ff;
+        transition: all 0.2s;
+    }
+
+    .faq-options .form-check:last-child {
+        margin-bottom: 0;
+    }
+
+    .faq-options .form-check:hover {
+        background: #eef2ff;
+    }
+
+    .faq-options .form-check-label {
+        font-weight: 500;
+        color: #333;
+        margin-left: 12px;
+        order: 1;
+    }
+
+    .faq-options .form-check-input {
+        margin: 0;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #cbd5e1;
+        order: 2;
+    }
+
+    .faq-options .form-check-input:checked {
+        background-color: #5EB47C;
+        border-color: #5EB47C;
+    }
+
+    .faq-answer {
+        padding: 16px;
+        background: #f0fdf4;
+        border-radius: 8px;
+        margin-top: 12px;
+        border: 1px solid #dcfce7;
+    }
+
+    /* Header cho FAQ */
+    .faq-header {
+        background: #4f8cff;
+        color: #fff;
+        font-size: 1.25rem;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 12px 12px 0 0;
+        padding: 14px 8px 10px 8px;
+        margin-bottom: 0;
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+    }
+
+    .faq-header-sub {
+        font-size: 0.95rem;
+        font-weight: 500;
+        opacity: 0.9;
+        margin-top: 4px;
+    }
+
+    .table-university {
+        font-size: 14px;
+    }
+
+    .table-university th {
+        font-size: 15px;
+        vertical-align: middle !important;
+    }
+
+    .table-university td {
+        vertical-align: middle !important;
+    }
+
+    /* Căn trái cho tất cả các cột, trừ chỉ tiêu và điểm chuẩn */
+    .table-university td,
+    .table-university th {
+        text-align: left;
+    }
+
+    /* Căn giữa cho cột chỉ tiêu và điểm chuẩn */
+    .table-university td:nth-child(3),
+    .table-university th:nth-child(3),
+    .table-university td:nth-child(5),
+    .table-university td:nth-child(6),
+    .table-university td:nth-child(7),
+    .table-university th:nth-child(5),
+    .table-university th:nth-child(6),
+    .table-university th:nth-child(7) {
+        text-align: center;
+    }
+
+    .table-responsive {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    .table-scroll-body {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    .table-scroll-body table {
+        margin-bottom: 0;
+    }
+
+    .table-university {
+        min-width: 500px;
+    }
+
+    /* Chỉ áp dụng cho form khảo sát cá nhân */
+    #tab-khaoSatCaNhan form .form-control,
+    #tab-khaoSatCaNhan form .form-select,
+    #tab-khaoSatCaNhan form .input-group>.form-control,
+    #tab-khaoSatCaNhan form .input-group>.form-select {
+        width: 100% !important;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    #tab-khaoSatCaNhan form .input-group {
+        flex-wrap: nowrap;
+    }
+
+    #tab-khaoSatCaNhan form .input-group .input-group-text {
+        min-width: 40px;
+        text-align: center;
+        padding: 0.375rem 0.75rem;
+    }
+
+    /* Đảm bảo các input-group chia đều không bị co lại */
+    #tab-khaoSatCaNhan form .input-group>.form-control {
+        flex: 1 1 0%;
+        min-width: 120px;
+    }
+
+    /* Đảm bảo select trong input group có kích thước phù hợp */
+    #tab-khaoSatCaNhan form .input-group>.form-select {
+        flex: 1 1 0%;
+        min-width: 150px;
+    }
+
+    /* Đảm bảo input number có kích thước phù hợp */
+    #tab-khaoSatCaNhan form .input-group input[type="number"] {
+        min-width: 120px;
+    }
+
+    /* Style cho dấu * của trường required */
+    #tab-khaoSatCaNhan form .form-label {
+        position: relative;
+    }
+
+    #tab-khaoSatCaNhan form .form-label.required:after {
+        content: " *";
+        color: #dc3545;
+        position: absolute;
+        margin-left: 2px;
+    }
+</style>
+
+<script>
+    // Function to fill demo data
+    function fillDemoData() {
+        // Thông tin cá nhân
+        document.getElementById('fullName').value = 'Nguyễn Văn A';
+        document.getElementById('birthDate').value = '2005-05-15';
+        document.getElementById('gender').value = 'Nam';
+        document.getElementById('email').value = 'nguyenvana@gmail.com';
+        document.getElementById('phone').value = '0987654321';
+        document.getElementById('password').value = 'Demo@123';
+
+        // Thông tin học tập
+        document.getElementById('score').value = '8.5';
+        document.querySelector('#score').nextElementSibling.value = 'Điểm học bạ';
+        document.getElementById('tuition').value = '30';
+        document.getElementById('location').value = 'Hà Nội';
+
+        // Chứng chỉ
+        document.getElementById('englishCert').value = '7.5';
+        document.querySelector('#englishCert').nextElementSibling.value = 'IELTS';
+        document.getElementById('satAct').value = '1350';
+        document.querySelector('#satAct').nextElementSibling.value = 'SAT';
+
+        // Thông tin bổ sung
+        document.getElementById('religion').value = 'Không';
+        document.getElementById('height').value = '175';
+        document.getElementById('weight').value = '65';
+        document.getElementById('disease').value = 'Không có';
+
+        // Trigger change events to update any dependent UI
+        document.querySelectorAll('input, select').forEach(element => {
+            element.dispatchEvent(new Event('change'));
+        });
+    }
+
+    // Form validation
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent default form submission
+                
+                if (!form.checkValidity()) {
+                    event.stopPropagation();
+                    form.classList.add('was-validated');
+                    return;
+                }
+
+                // Collect form data
+                const formData = {
+                    fullName: document.getElementById('fullName').value,
+                    birthDate: document.getElementById('birthDate').value,
+                    gender: document.getElementById('gender').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    password: document.getElementById('password').value,
+                    score: {
+                        value: document.getElementById('score').value,
+                        type: document.querySelector('#score').nextElementSibling.value
+                    },
+                    tuition: document.getElementById('tuition').value,
+                    location: document.getElementById('location').value,
+                    englishCert: {
+                        value: document.getElementById('englishCert').value,
+                        type: document.querySelector('#englishCert').nextElementSibling.value
+                    },
+                    satAct: {
+                        value: document.getElementById('satAct').value,
+                        type: document.querySelector('#satAct').nextElementSibling.value
+                    },
+                    religion: document.getElementById('religion').value,
+                    height: document.getElementById('height').value,
+                    weight: document.getElementById('weight').value,
+                    disease: document.getElementById('disease').value
+                };
+
+                // Log form data before sending
+                console.log('=== FORM DATA BEFORE SENDING ===');
+                console.table({
+                    'Họ và tên': formData.fullName,
+                    'Ngày sinh': formData.birthDate,
+                    'Giới tính': formData.gender,
+                    'Email': formData.email,
+                    'Số điện thoại': formData.phone,
+                    'Điểm': `${formData.score.value} (${formData.score.type})`,
+                    'Học phí': `${formData.tuition} triệu/năm`,
+                    'Khu vực': formData.location,
+                    'Chứng chỉ tiếng Anh': formData.englishCert.value ? `${formData.englishCert.value} (${formData.englishCert.type})` : 'Không có',
+                    'Điểm SAT/ACT': formData.satAct.value ? `${formData.satAct.value} (${formData.satAct.type})` : 'Không có',
+                    'Tôn giáo': formData.religion || 'Không có',
+                    'Chiều cao': formData.height ? `${formData.height} cm` : 'Không có',
+                    'Cân nặng': formData.weight ? `${formData.weight} kg` : 'Không có',
+                    'Bệnh lý': formData.disease || 'Không có'
+                });
+                console.log('=============================');
+                // Here you can send the data to your server
+                console.log('Form data:', formData);
+                window.location.href = '/trac-nghiem/ket-qua';
+                form.classList.add('was-validated');
+            }, false)
+        })
+    })()
+
+    // Add click handlers for radio buttons
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add click handlers for radio buttons
+        document.querySelectorAll('.form-check-input').forEach(radio => {
+            radio.addEventListener('change', function () {
+                // Remove selected class from all siblings
+                const parentDiv = this.closest('.d-flex.flex-column');
+                if (parentDiv) {
+                    parentDiv.querySelectorAll('.form-check').forEach(check => {
+                        check.classList.remove('selected');
+                    });
+
+                    // Add selected class to parent form-check
+                    this.closest('.form-check').classList.add('selected');
+                }
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('nganhRadarChart').getContext('2d');
+
+        // Cấu hình màu sắc
+        const colors = {
+            business: '#007bff',
+            engineering: '#28a745',
+            arts: '#dc3545',
+            science: '#6f42c1',
+            military: '#17a2b8',
+            education: '#ffc107'
+        };
+
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    'Kinh doanh & Quản lý',
+                    'Kỹ thuật & Công nghệ',
+                    'Nghệ thuật & Sáng tạo',
+                    'Khoa học & Nghiên cứu',
+                    'Quân đội, Công an, Hàng không',
+                    'Giáo dục & Công tác xã hội'
+                ],
+                datasets: [{
+                    label: 'Tổng điểm',
+                    data: [-5, 28, 32, 25, 18, 22],
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: Object.values(colors),
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: Object.values(colors),
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: {
+                            size: 14
+                        },
+                        bodyFont: {
+                            size: 13
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true,
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 40,
+                        pointLabels: {
+                            font: {
+                                size: function () {
+                                    return window.innerWidth < 768 ? 11 : 13;
+                                },
+                                weight: '500'
+                            },
+                            color: Object.values(colors),
+                            padding: function () {
+                                return window.innerWidth < 768 ? 15 : 20;
+                            }
+                        },
+                        ticks: {
+                            stepSize: 10,
+                            backdropColor: 'transparent',
+                            color: 'rgba(0, 0, 0, 0.5)',
+                            font: {
+                                size: function () {
+                                    return window.innerWidth < 768 ? 9 : 11;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('.switch-tab').click(function () {
+            // Remove active class from all tabs
+            $('.switch-tab').removeClass('active');
+            // Add active class to clicked tab
+            $(this).addClass('active');
+
+            // Hide all tab panes with transition
+            $('.tab-pane-custom').removeClass('show');
+
+            // Show the selected tab pane with transition
+            setTimeout(() => {
+                $('#tab-' + $(this).data('tab')).addClass('show');
+            }, 100);
+        });
+    });
+</script>

@@ -1,0 +1,61 @@
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Chỉnh sửa câu hỏi</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin câu hỏi</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form action="/admin/cau-hoi/edit/<%= cauHoi.id %>" method="POST">
+                            <div class="form-group">
+                                <label for="noiDung">Nội dung câu hỏi</label>
+                                <textarea class="form-control" id="noiDung" name="noiDung" rows="3" required><%= cauHoi.noiDung %></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="loaiCauHoi">Loại câu hỏi</label>
+                                <select class="form-control" id="loaiCauHoi" name="loaiCauHoi" required>
+                                    <option value="">Chọn loại câu hỏi</option>
+                                    <option value="tracNghiem" <%= cauHoi.loaiCauHoi === 'tracNghiem' ? 'selected' : '' %>>Trắc nghiệm</option>
+                                    <option value="tuLuan" <%= cauHoi.loaiCauHoi === 'tuLuan' ? 'selected' : '' %>>Tự luận</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="doKho">Độ khó</label>
+                                <select class="form-control" id="doKho" name="doKho" required>
+                                    <option value="">Chọn độ khó</option>
+                                    <option value="de" <%= cauHoi.doKho === 'de' ? 'selected' : '' %>>Dễ</option>
+                                    <option value="trungBinh" <%= cauHoi.doKho === 'trungBinh' ? 'selected' : '' %>>Trung bình</option>
+                                    <option value="kho" <%= cauHoi.doKho === 'kho' ? 'selected' : '' %>>Khó</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Lưu</button>
+                                <a href="/admin/cau-hoi" class="btn btn-default">Hủy</a>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+<!-- /.content --> 

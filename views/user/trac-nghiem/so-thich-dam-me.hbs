@@ -1,0 +1,137 @@
+<div class="container mt-2 bg-light rounded-4">
+    {{> buoc-trac-nghiem currentStep=2}}
+
+    <div class="bg-white rounded-4 p-4 p-md-5">
+        <div class="d-flex align-items-center gap-2 mb-4">
+            <h1 class="h3 mb-0">💡 Nhóm 1: Sở thích và đam mê cá nhân</h1>
+        </div>
+
+        <p class="mb-4">
+            <b> Bạn thích gì? Điều gì khiến bạn hào hứng và muốn làm mỗi ngày?  </b>
+            <br>
+            Nhóm này giúp phân phá những hoạt
+            động, lĩnh vực mà bạn yêu thích tự nhiên – từ nghệ thuật, công nghệ, kinh doanh đến các hoạt động xã hội...
+            Vì đam mê chính là bước thời gian quan trọng để chọn ngành học phù hợp.</p>
+
+        <form id="interestForm" class="needs-validation" novalidate>
+            <div class="row">
+                {{#each questions as |question|}}   
+                <div class="col-md-6 mb-4">
+                    <div class="bg-light p-3 rounded-3 h-100">
+                        <p class="fw-bold mb-3">{{this}}. Khi có thời gian rảnh, bạn thích làm gì nhất?</p>
+                        <hr class="my-3">
+                        <div class="d-flex flex-column gap-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="q{{this}}" id="q{{this}}a" value="A" required>
+                                <label class="form-check-label" for="q{{this}}a"><b>A.</b> Đọc sách, nghiên cứu tài liệu, học hỏi kiến
+                                    thức mới.</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="q{{this}}" id="q{{this}}b" value="B">
+                                <label class="form-check-label" for="q{{this}}b"><b>B.</b> Chơi thể thao, tập luyện thể chất, tham gia
+                                    các hoạt động ngoài trời.</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="q{{this}}" id="q{{this}}c" value="C">
+                                <label class="form-check-label" for="q{{this}}c"><b>C.</b> Sáng tác nhạc, vẽ tranh, chụp ảnh, làm
+                                    video.</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="q{{this}}" id="q{{this}}d" value="D">
+                                <label class="form-check-label" for="q{{this}}d"><b>D.</b> Lắp ráp mô hình, sửa chữa đồ điện tử, thử
+                                    nghiệm kỹ thuật an.</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="q{{this}}" id="q{{this}}e" value="E">
+                                <label class="form-check-label" for="q{{this}}e"><b>E.</b> Gặp gỡ bạn bè, thuyết trình, nói chuyện trước
+                                    đám đông.</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                <div class="d-flex justify-content-end gap-2 mt-5">
+                    <a href="/trac-nghiem/bat-dau" class="btn btn-outline-secondary px-4">Quay lại</a>
+                    <a href="/trac-nghiem/ky-nang-kha-nang" class="btn btn-success px-4">Tiếp tục</a>
+                </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-check {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        padding: 8px;
+        padding-left: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .form-check:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .form-check.selected {
+        background-color: #ebd4a1;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .form-check.selected::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        border-radius: 4px 0 0 4px;
+    }
+
+    .form-check-input {
+        margin: 0;
+        order: 2;
+    }
+
+    .form-check-label {
+        margin: 0;
+        flex: 1;
+        order: 1;
+    }
+</style>
+
+<script>
+    // Form validation
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                } else {
+                    event.preventDefault();
+                    window.location.href = '/trac-nghiem/ky-nang-kha-nang';
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+
+    // Add click handlers for radio buttons
+    document.querySelectorAll('.form-check-input').forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Remove selected class from all siblings
+            const parentDiv = this.closest('.d-flex.flex-column');
+            parentDiv.querySelectorAll('.form-check').forEach(check => {
+                check.classList.remove('selected');
+            });
+            
+            // Add selected class to parent form-check
+            this.closest('.form-check').classList.add('selected');
+        });
+    });
+</script>

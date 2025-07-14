@@ -1,0 +1,467 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 60px;
+        color: #333;
+    }
+
+    .hexagon-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+    }
+
+    .hexagon-item {
+        width: 250px;
+        height: 280px;
+        position: relative;
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    /* Reset the grid and use absolute positioning */
+    .hexagon-grid {
+        display: block;
+        height: 800px;
+        position: relative;
+    }
+
+    .hexagon-item {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Top row */
+    .hexagon-item:nth-child(1) {
+        top: 0;
+        transform: translateX(calc(-50% - 130px));
+    }
+
+    .hexagon-item:nth-child(2) {
+        top: 0;
+        transform: translateX(calc(-50% + 130px));
+    }
+
+    /* Middle row */
+    .hexagon-item:nth-child(3) {
+        top: 220px;
+        transform: translateX(calc(-50% - 260px));
+    }
+
+    .hexagon-item:nth-child(4) {
+        top: 220px;
+        transform: translateX(calc(-50% + 260px));
+    }
+
+    /* Bottom row */
+    .hexagon-item:nth-child(5) {
+        top: 440px;
+        transform: translateX(calc(-50% - 130px));
+    }
+
+    .hexagon-item:nth-child(6) {
+        top: 440px;
+        transform: translateX(calc(-50% + 130px));
+    }
+
+    .hexagon-item:hover {
+        transform: translateX(-50%) scale(1.05);
+    }
+
+    /* Adjust hover effects for positioned items */
+    .hexagon-item:nth-child(1):hover {
+        transform: translateX(calc(-50% - 130px)) scale(1.05);
+    }
+
+    .hexagon-item:nth-child(2):hover {
+        transform: translateX(calc(-50% + 130px)) scale(1.05);
+    }
+
+    .hexagon-item:nth-child(3):hover {
+        transform: translateX(calc(-50% - 260px)) scale(1.05);
+    }
+
+    .hexagon-item:nth-child(4):hover {
+        transform: translateX(calc(-50% + 260px)) scale(1.05);
+    }
+
+    .hexagon-item:nth-child(5):hover {
+        transform: translateX(calc(-50% - 130px)) scale(1.05);
+    }
+
+    .hexagon-item:nth-child(6):hover {
+        transform: translateX(calc(-50% + 130px)) scale(1.05);
+    }
+
+    .hexagon-content {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        text-align: center;
+        color: white;
+    }
+
+    .hexagon-icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 15px;
+    }
+
+    .hexagon-title {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .hexagon-subtitle {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    /* Specific colors for each hexagon */
+    .business { background-color: #4285f4; }
+    .engineering { background-color: #34a853; }
+    .education { background-color: #fbbc05; }
+    .arts { background-color: #ea4335; }
+    .military { background-color: #1a73e8; }
+    .science { background-color: #9c27b0; }
+
+    @media (max-width: 768px) {
+        .hexagon-grid {
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hexagon-item {
+            position: static;
+            transform: none;
+            width: 200px;
+            height: 230px;
+        }
+
+        .hexagon-item:nth-child(n) {
+            transform: none;
+        }
+
+        .hexagon-item:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hexagon-grid {
+            grid-template-columns: 1fr;
+            max-width: 250px;
+        }
+        
+        .hexagon-item {
+            width: 180px;
+            height: 210px;
+        }
+        
+        .hexagon-item:nth-child(n) {
+            transform: none;
+        }
+    }
+
+    /* Add new styles for the introduction section */
+    .intro-section {
+        max-width: 800px;
+        margin: 60px auto;
+        padding: 20px;
+    }
+
+    .intro-section h1 {
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+    }
+
+    .intro-text {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .intro-section h2 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .intro-list {
+        list-style: none;
+        padding-left: 20px;
+        margin-bottom: 20px;
+    }
+
+    .intro-list li {
+        position: relative;
+        padding-left: 20px;
+        margin-bottom: 8px;
+        color: #555;
+    }
+
+    .intro-list li:before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: #e76f51;
+    }
+
+    .action-button {
+        display: inline-block;
+        background-color: #e76f51;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-button:hover {
+        background-color: #e25c3b;
+    }
+
+    .faq-section {
+        margin-top: 30px;
+    }
+
+    .faq-item {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+
+    .faq-question {
+        padding: 15px;
+        background-color: #fff;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #333;
+        transition: background-color 0.3s ease;
+    }
+
+    .faq-question:hover {
+        background-color: #f5f5f5;
+    }
+
+    .faq-question::after {
+        content: "▼";
+        font-size: 12px;
+        color: #666;
+        transition: transform 0.3s ease;
+    }
+
+    .faq-answer {
+        padding: 0;
+        background-color: #f9f9f9;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease-out;
+        opacity: 0;
+    }
+
+    .faq-item.active .faq-question::after {
+        content: "▲";
+        transform: rotate(180deg);
+    }
+
+    .faq-item.active .faq-answer {
+        padding: 15px;
+        max-height: 1000px;
+        opacity: 1;
+    }
+</style>
+
+<div class="container">
+    <h1 class="title">Trắc Nghiệm Hướng Nghiệp</h1>
+    
+    <div class="hexagon-grid">
+        <!-- Business & Management -->
+        <div class="hexagon-item business">
+            <div class="hexagon-content">
+                <img src="/images/svg/business-icon.svg" alt="" class="hexagon-icon">
+                <div class="hexagon-title">Kinh doanh & Quản lý</div>
+                <div class="hexagon-subtitle">(Business & Management)</div>
+            </div>
+        </div>
+
+        <!-- Engineering & Technology -->
+        <div class="hexagon-item engineering">
+            <div class="hexagon-content">
+                <img src="/images/svg/engineering-icon.svg" alt="" class="hexagon-icon">
+                <div class="hexagon-title">Kỹ thuật & Công nghệ</div>
+                <div class="hexagon-subtitle">(Engineering & Technology)</div>
+            </div>
+        </div>
+
+        <!-- Education & Social Work -->
+        <div class="hexagon-item education">
+            <div class="hexagon-content">
+                <img src="/images/svg/education-icon.svg" alt="" class="hexagon-icon">
+                <div class="hexagon-title">Giáo dục & Công tác xã hội</div>
+                <div class="hexagon-subtitle">(Education & Social Work)</div>
+            </div>
+        </div>
+
+        <!-- Arts & Creativity -->
+        <div class="hexagon-item arts">
+            <div class="hexagon-content">
+                <img src="/images/svg/arts-icon.svg" alt="" class="hexagon-icon">
+                <div class="hexagon-title">Nghệ thuật & Sáng tạo</div>
+                <div class="hexagon-subtitle">(Arts & Creativity)</div>
+            </div>
+        </div>
+
+        <!-- Military, Police & Aviation -->
+        <div class="hexagon-item military">
+            <div class="hexagon-content">
+                <img src="/images/svg/military-icon.svg" alt="" class="hexagon-icon">
+                <div class="hexagon-title">Quân đội, Công an, Hàng không</div>
+                <div class="hexagon-subtitle">(Military, Police & Aviation)</div>
+            </div>
+        </div>
+
+        <!-- Science & Research -->
+        <div class="hexagon-item science">
+            <div class="hexagon-content">
+                <img src="/images/svg/science-icon.svg" alt="" class="hexagon-icon">
+                <div class="hexagon-title">Khoa học & Nghiên cứu</div>
+                <div class="hexagon-subtitle">(Science & Research)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="intro-section">
+    <h1>Giới Thiệu</h1>
+    
+    <p class="intro-text">
+        Bạn đang loay hoay không biết mình hợp ngành gì? Hoặc đã có ngành yêu thích và muốn tìm hiểu thêm? Chúng tôi mang đến cho bạn hai lựa chọn để bắt đầu hành trình định hướng nghề nghiệp.
+    </p>
+
+    <h2>1. Làm bài trắc nghiệm hướng nghiệp (khuyến dùng)</h2>
+    
+    <p class="intro-text">
+        Bài trắc nghiệm của CareerTest được phát triển dựa trên sự kết hợp giữa Công cụ Sở thích nghề nghiệp theo Holland: The Holland Career Code – The RIASEC Model và thang đo Phát triển và Giáo dục Hướng nghiệp CED(Career Education and Development Scale), đồng thời đã được điều chỉnh, tối ưu và hoàn thiện bởi đội ngũ chuyên môn của chúng tôi nhằm phù hợp hơn với đối tượng người dùng tại Việt Nam.
+    </p>
+
+    <p class="intro-text">Bài trắc nghiệm được xây dựng dựa trên các mô hình khoa học và thang đo tâm lý uy tín, giúp bạn hiểu rõ:</p>
+    <ul class="intro-list">
+        <li>Tính cách, sở thích và năng lực nổi bật của bản thân</li>
+        <li>Những nhóm ngành phù hợp với bạn</li>
+        <li>Gợi ý ngành học và các trường đại học nên cân nhắc</li>
+        <li>Thời gian thực hiện khoảng 15-20 phút</li>
+    </ul>
+
+    <a href="/trac-nghiem/bat-dau">
+        <button class="action-button">Làm trắc nghiệm</button>
+    </a>
+
+    <div class="faq-section">
+        <div class="faq-item">
+            <div class="faq-question">Thang đo Phát triển và Giáo dục Hướng nghiệp CED là gì?</div>
+            <div class="faq-answer">
+                Thang đo Phát triển và Giáo dục Hướng nghiệp CED (Career Education and Development Scale) là một công cụ đánh giá được phát triển để đo lường mức độ phát triển hướng nghiệp của học sinh, sinh viên. Thang đo này tập trung vào 6 khía cạnh chính:
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Nhận thức về bản thân và nghề nghiệp</li>
+                    <li>Khám phá và lập kế hoạch nghề nghiệp</li>
+                    <li>Ra quyết định nghề nghiệp</li>
+                    <li>Phát triển kỹ năng nghề nghiệp</li>
+                    <li>Quản lý sự nghiệp</li>
+                    <li>Thích ứng với môi trường làm việc</li>
+                </ul>
+                Thang đo này giúp đánh giá và hỗ trợ quá trình phát triển hướng nghiệp một cách toàn diện.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Công cụ Sở thích nghề nghiệp Holland là gì?</div>
+            <div class="faq-answer">
+                Công cụ Sở thích nghề nghiệp Holland (Holland Career Code) là một mô hình phân loại nghề nghiệp được phát triển bởi John L. Holland. Mô hình này dựa trên 6 nhóm tính cách và sở thích nghề nghiệp (RIASEC):
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>R - Realistic (Thực tế):</strong> Thích làm việc với máy móc, công cụ, động vật</li>
+                    <li><strong>I - Investigative (Nghiên cứu):</strong> Thích quan sát, học hỏi, điều tra, phân tích</li>
+                    <li><strong>A - Artistic (Nghệ thuật):</strong> Thích sáng tạo, thiết kế, biểu diễn</li>
+                    <li><strong>S - Social (Xã hội):</strong> Thích giúp đỡ, dạy học, chăm sóc người khác</li>
+                    <li><strong>E - Enterprising (Kinh doanh):</strong> Thích thuyết phục, lãnh đạo, quản lý</li>
+                    <li><strong>C - Conventional (Quy củ):</strong> Thích làm việc có tổ chức, theo quy trình</li>
+                </ul>
+                Mô hình này giúp người dùng xác định nhóm tính cách phù hợp và tìm ra các nghề nghiệp tương ứng với sở thích của mình.
+            </div>
+        </div>
+    </div>
+
+    <h2>2. Biết rõ mình muốn gì? Chọn ngành ngay!</h2>
+    
+    <p class="intro-text">
+        Nếu bạn đã có sẵn một ngành yêu thích, bạn có thể bỏ qua trắc nghiệm và đi thẳng đến phần:
+    </p>
+    <ul class="intro-list">
+        <li>Khám phá chi tiết về ngành đó</li>
+        <li>Xem các trường đào tạo uy tín</li>
+        <li>So sánh học phí, điểm chuẩn, tỷ lệ có việc làm, v.v.</li>
+    </ul>
+
+    <button class="action-button">Chọn ngành nghề</button>
+</div> 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            
+            question.addEventListener('click', () => {
+                // Close all other items with animation
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current item with animation
+                item.classList.toggle('active');
+            });
+        });
+    });
+</script> 

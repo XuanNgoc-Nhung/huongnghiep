@@ -1,0 +1,192 @@
+<style>
+    .stepper-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto;
+        max-width: 100%;
+    }
+
+    .stepper-item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        transition: all 0.3s ease-in-out;
+        width: 100%;
+    }
+
+    .stepper-item::before {
+        position: absolute;
+        content: "";
+        border-bottom: 3px solid #e0e0e0;
+        width: 100%;
+        top: 25px;
+        left: -30%;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .stepper-item::after {
+        position: absolute;
+        content: "";
+        border-bottom: 3px solid #e0e0e0;
+        width: 100%;
+        top: 25px;
+        left: 35%;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .stepper-item:last-child::after {
+        width: 90% !important;
+    }
+
+    .stepper-item:last-child::before {
+        width: 90% !important;
+    }
+    .stepper-item .step-counter {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #fff;
+        border: 3px solid #e0e0e0;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        color: #666;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .stepper-item.active {
+        font-weight: 600;
+        transform: scale(1.05);
+    }
+
+    .stepper-item.active .step-counter {
+        background: linear-gradient(135deg, #4CAF50, #2E7D32);
+        border-color: #2E7D32;
+        color: white;
+        box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+        position: relative;
+        z-index: 10;
+    }
+
+    .stepper-item.completed .step-counter {
+        background: linear-gradient(135deg, #66BB6A, #43A047);
+        border-color: #43A047;
+        color: white;
+        position: relative;
+        z-index: 10;
+    }
+
+    .stepper-item.completed::before,
+    .stepper-item.completed::after,
+    .stepper-item.active::before {
+        border-color: #4CAF50;
+    }
+
+    .stepper-item:first-child::before {
+        content: none;
+    }
+
+    .stepper-item:last-child::after {
+        content: none;
+    }
+
+    .step-name {
+        font-size: 14px;
+        text-align: center;
+        color: #666;
+        margin-top: 6px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .stepper-item.active .step-name {
+        color: #2E7D32;
+    }
+
+    .stepper-item.completed .step-name {
+        color: #43A047;
+    }
+
+    .stepper-item .step-counter::after {
+        content: attr(data-step);
+    }
+
+    .stepper-item.completed .step-counter::after {
+        content: "✓";
+        font-size: 20px;
+    }
+
+    .stepper-item:last-child {
+        width: 90%;
+    }
+
+    @media (max-width: 768px) {
+        .stepper-wrapper {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .stepper-item {
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .stepper-item::before,
+        .stepper-item::after {
+            content: none;
+        }
+
+        .step-name {
+            margin: 0 0 0 15px;
+            text-align: left;
+        }
+
+        .stepper-item.active {
+            transform: scale(1.02);
+        }
+    }
+</style>
+
+<div class="stepper-wrapper mb-5">
+    <div class="stepper-item {{#if (eq currentStep 1)}}active{{/if}} {{#if (gt currentStep 1)}}completed{{/if}}">
+        <div class="step-counter" data-step="1"></div>
+        <div class="step-name">Bắt đầu</div>
+    </div>
+    <div class="stepper-item {{#if (eq currentStep 2)}}active{{/if}} {{#if (gt currentStep 2)}}completed{{/if}}">
+        <div class="step-counter" data-step="2"></div>
+        <div class="step-name">Sở thích & đam mê</div>
+    </div>
+    <div class="stepper-item {{#if (eq currentStep 3)}}active{{/if}} {{#if (gt currentStep 3)}}completed{{/if}}">
+        <div class="step-counter" data-step="3"></div>
+        <div class="step-name">Kỹ năng & khả năng</div>
+    </div>
+    <div class="stepper-item {{#if (eq currentStep 4)}}active{{/if}} {{#if (gt currentStep 4)}}completed{{/if}}">
+        <div class="step-counter" data-step="4"></div>
+        <div class="step-name">Môi trường làm việc</div>
+    </div>
+    <div class="stepper-item {{#if (eq currentStep 5)}}active{{/if}} {{#if (gt currentStep 5)}}completed{{/if}}">
+        <div class="step-counter" data-step="5"></div>
+        <div class="step-name">Phong cách làm việc</div>
+    </div>
+    <div class="stepper-item {{#if (eq currentStep 6)}}active{{/if}} {{#if (gt currentStep 6)}}completed{{/if}}">
+        <div class="step-counter" data-step="6"></div>
+        <div class="step-name">Ngành phù hợp</div>
+    </div>
+    <div class="stepper-item {{#if (eq currentStep 7)}}active{{/if}} {{#if (gt currentStep 7)}}completed{{/if}}">
+        <div class="step-counter" data-step="7"></div>
+        <div class="step-name">Kết quả</div>
+    </div>
+</div>

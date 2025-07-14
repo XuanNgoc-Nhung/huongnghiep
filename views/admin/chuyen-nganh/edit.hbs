@@ -1,0 +1,134 @@
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Chỉnh sửa Chuyên ngành</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-right">
+                    <a href="/admin/chuyen-nganh" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin chuyên ngành</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form action="/admin/chuyen-nganh/edit/{{chuyenNganh.id}}" method="POST" id="editForm">
+                            <div class="form-group">
+                                <label for="id">Mã chuyên ngành</label>
+                                <input type="text" class="form-control" id="id" name="ma_chuyen_nganh" value="{{chuyenNganh.ma_chuyen_nganh}}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="ten">Tên chuyên ngành <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="ten" name="ten_chuyen_nganh" value="{{chuyenNganh.ten_chuyen_nganh}}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nganh">Ngành <span class="text-danger">*</span></label>
+                                <select class="form-control select2" id="nganh" name="nganh_id" required>
+                                    <option value="">Chọn ngành</option>
+                                    {{#each nganhs}}
+                                    <option value="{{this.id}}" {{#if (eq this.id ../chuyenNganh.nganh_id)}}selected{{/if}}>{{this.ten_nganh}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="moTa">Mô tả</label>
+                                <textarea class="form-control" id="moTa" name="mo_ta" rows="3">{{chuyenNganh.mo_ta}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Lưu thay đổi
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add Select2 CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('editForm');
+    
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        try {
+            const formData = new FormData(form);
+            const data = {
+                ten: formData.get('ten'),
+                nganh: formData.get('nganh'),
+                moTa: formData.get('moTa')
+            };
+            
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: result.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    window.location.href = '/admin/chuyen-nganh';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: result.message
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Có lỗi xảy ra khi cập nhật thông tin chuyên ngành'
+            });
+        }
+    });
+});
+
+$(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Tìm kiếm ngành...",
+        allowClear: true,
+        language: {
+            noResults: function() {
+                return "Không tìm thấy kết quả";
+            }
+        }
+    });
+});
+</script> 

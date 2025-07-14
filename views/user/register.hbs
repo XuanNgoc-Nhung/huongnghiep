@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - CareerTest</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .register-container {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            display: flex;
+            gap: 40px;
+        }
+        .register-form {
+            flex: 1;
+            width: 100%;
+            max-width: 400px;
+        }
+        .register-image {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .register-image img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .logo span {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .el-input__inner {
+            height: 44px !important;
+            font-size: 14px !important;
+            border-radius: 8px !important;
+        }
+        .el-input__inner:focus {
+            border-color: #4CAF50 !important;
+            box-shadow: none !important;
+        }
+        .el-form-item {
+            margin-bottom: 20px !important;
+        }
+        .terms {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .terms a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-register:hover {
+            background-color: #45a049;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .login-link a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: #ddd;
+        }
+        .divider span {
+            padding: 0 10px;
+            color: #666;
+            font-size: 14px;
+        }
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .google-btn:hover {
+            background-color: #f5f5f5;
+        }
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+        }
+        .google-btn span {
+            font-size: 14px;
+            color: #333;
+        }
+        @media (max-width: 992px) {
+            .register-container {
+                flex-direction: column;
+            }
+            .register-form {
+                max-width: 100%;
+            }
+            .register-image {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <div class="register-container">
+            <div class="register-form">
+                <div class="logo">
+                    <img src="/images/logo.svg" alt="CareerTest Logo">
+                </div>
+                
+                <h1 class="form-title">Đăng ký</h1>
+                
+                <el-form :model="formData" :rules="rules" ref="registerForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <el-form-item prop="firstName">
+                                <el-input 
+                                    v-model="formData.firstName"
+                                    placeholder="Ví dụ: Ngọc">
+                                </el-input>
+                            </el-form-item>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <el-form-item prop="lastName">
+                                <el-input 
+                                    v-model="formData.lastName"
+                                    placeholder="Ví dụ: Trần">
+                                </el-input>
+                            </el-form-item>
+                        </div>
+
+                        <div class="col-12">
+                            <el-form-item prop="email">
+                                <el-input 
+                                    v-model="formData.email"
+                                    placeholder="htran@gmail.com">
+                                </el-input>
+                            </el-form-item>
+                        </div>
+                        
+                        <div class="col-12">
+                            <el-form-item prop="phone">
+                                <el-input 
+                                    v-model="formData.phone"
+                                    placeholder="Nhập số điện thoại">
+                                </el-input>
+                            </el-form-item>
+                        </div>
+                        
+                        <div class="col-12">
+                            <el-form-item prop="password">
+                                <el-input 
+                                    v-model="formData.password"
+                                    :type="passwordVisible ? 'text' : 'password'"
+                                    placeholder="Nhập mật khẩu">
+                                    <template #suffix>
+                                        <i 
+                                            class="el-icon-view password-toggle"
+                                            :class="{ 'active': passwordVisible }"
+                                            @click="togglePassword">
+                                        </i>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+                        </div>
+                        
+                        <div class="col-12">
+                            <el-form-item prop="confirmPassword">
+                                <el-input 
+                                    v-model="formData.confirmPassword"
+                                    :type="passwordVisible ? 'text' : 'password'"
+                                    placeholder="Nhập lại mật khẩu">
+                                </el-input>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    
+                    <el-button 
+                        type="primary" 
+                        class="register-button"
+                        @click="submitForm">
+                        Đăng ký
+                    </el-button>
+                    
+                    <div class="login-link">
+                        Đã có tài khoản? <a href="/auth/login">Đăng nhập</a>
+                    </div>
+                </el-form>
+            </div>
+            
+            <div class="register-image">
+                <img src="/images/register-illustration.svg" alt="Register Illustration">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/umd/locale/vi.js"></script>
+    <script>
+        ELEMENT.locale(ELEMENT.lang.vi)
+        
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    formData: {
+                        firstName: '',
+                        lastName: '',
+                        email: '',
+                        phone: '',
+                        password: '',
+                        confirmPassword: ''
+                    },
+                    passwordVisible: false,
+                    rules: {
+                        firstName: [
+                            { required: true, message: 'Vui lòng nhập tên', trigger: 'blur' }
+                        ],
+                        lastName: [
+                            { required: true, message: 'Vui lòng nhập họ', trigger: 'blur' }
+                        ],
+                        email: [
+                            { required: true, message: 'Vui lòng nhập email', trigger: 'blur' },
+                            { type: 'email', message: 'Email không hợp lệ', trigger: 'blur' }
+                        ],
+                        phone: [
+                            { required: true, message: 'Vui lòng nhập số điện thoại', trigger: 'blur' },
+                            { pattern: /^[0-9]{10}$/, message: 'Số điện thoại không hợp lệ', trigger: 'blur' }
+                        ],
+                        password: [
+                            { required: true, message: 'Vui lòng nhập mật khẩu', trigger: 'blur' },
+                            { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự', trigger: 'blur' }
+                        ],
+                        confirmPassword: [
+                            { required: true, message: 'Vui lòng nhập lại mật khẩu', trigger: 'blur' },
+                            { 
+                                validator: (rule, value, callback) => {
+                                    if (value !== this.formData.password) {
+                                        callback(new Error('Mật khẩu không khớp'));
+                                    } else {
+                                        callback();
+                                    }
+                                },
+                                trigger: 'blur'
+                            }
+                        ]
+                    }
+                }
+            },
+            methods: {
+                togglePassword() {
+                    this.passwordVisible = !this.passwordVisible;
+                },
+                submitForm() {
+                    this.$refs.registerForm.validate((valid) => {
+                        if (valid) {
+                            fetch('/auth/register', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    firstName: this.formData.firstName,
+                                    lastName: this.formData.lastName,
+                                    email: this.formData.email,
+                                    phone: this.formData.phone,
+                                    password: this.formData.password
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.error) {
+                                    this.$message.error(data.error);
+                                } else {
+                                    this.$message({
+                                        message: data.message,
+                                        type: 'success'
+                                    });
+                                    setTimeout(() => {
+                                        window.location.href = data.redirectUrl;
+                                    }, 1500);
+                                }
+                            })
+                            .catch(error => {
+                                this.$message.error('Đã có lỗi xảy ra, vui lòng thử lại sau');
+                                console.error('Register error:', error);
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

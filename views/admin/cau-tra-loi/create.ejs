@@ -1,0 +1,61 @@
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Thêm câu trả lời mới</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin câu trả lời</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form action="/admin/cau-tra-loi/create" method="POST">
+                            <div class="form-group">
+                                <label for="noiDung">Nội dung câu trả lời</label>
+                                <textarea class="form-control" id="noiDung" name="noiDung" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="cauHoi">Câu hỏi</label>
+                                <select class="form-control" id="cauHoi" name="cauHoi" required>
+                                    <option value="">Chọn câu hỏi</option>
+                                    <% cauHois.forEach(function(cauHoi) { %>
+                                        <option value="<%= cauHoi.id %>"><%= cauHoi.noiDung %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dungSai">Đúng/Sai</label>
+                                <select class="form-control" id="dungSai" name="dungSai" required>
+                                    <option value="">Chọn đúng/sai</option>
+                                    <option value="true">Đúng</option>
+                                    <option value="false">Sai</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Lưu</button>
+                                <a href="/admin/cau-tra-loi" class="btn btn-default">Hủy</a>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+<!-- /.content --> 

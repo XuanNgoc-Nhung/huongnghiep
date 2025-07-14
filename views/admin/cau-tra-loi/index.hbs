@@ -1,0 +1,130 @@
+{{!-- views/admin/cau-tra-loi/index.hbs --}}
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Quản lý Câu trả lời</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-right">
+                    <a href="/admin/cau-tra-loi/create" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Thêm mới
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách câu trả lời</h3>
+                        <div class="card-tools">
+                            <form action="/admin/cau-tra-loi" method="GET" class="form-inline">
+                                <div class="input-group mr-2">
+                                    <input type="text" name="search" class="form-control" placeholder="Nhập nội dung câu trả lời..." value="{{search}}">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fas fa-search"></i> Tìm kiếm
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã câu trả lời</th>
+                                    <th>Câu hỏi</th>
+                                    <th>Nội dung</th>
+                                    <th>Điểm</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each cauTraLois}}
+                                <tr>
+                                    <td>{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
+                                    <td>{{this.id}}</td>
+                                    <td>{{this.cauHoi.noiDung}}</td>
+                                    <td>{{this.noiDung}}</td>
+                                    <td>{{this.diem}}</td>
+                                    <td class="text-center">
+                                        <a href="/admin/cau-tra-loi/edit/{{this.id}}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteCauTraLoi('{{this.id}}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    {{> pagination baseUrl="/admin/cau-tra-loi"}}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle search form submission
+    const searchForm = document.querySelector('form[action="/admin/cau-tra-loi"]');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchInput = this.querySelector('input[name="search"]');
+            const searchValue = searchInput.value.trim();
+            window.location.href = `/admin/cau-tra-loi?search=${encodeURIComponent(searchValue)}`;
+        });
+    }
+});
+
+function deleteCauTraLoi(id) {
+    Swal.fire({
+        title: 'Bạn có chắc chắn?',
+        text: "Bạn không thể hoàn tác sau khi xóa!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Có, xóa nó!',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/admin/cau-tra-loi/delete/${id}`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+
+function showToast(icon, title, text) {
+    Swal.fire({
+        icon: icon,
+        title: title,
+        text: text,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true
+    });
+}
+</script> 

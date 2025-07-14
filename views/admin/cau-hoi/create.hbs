@@ -1,0 +1,171 @@
+{{> admin/header}}
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Thêm câu hỏi mới</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-right">
+                    <a href="/admin/cau-hoi" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin câu hỏi</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form id="createQuestionForm" action="/admin/cau-hoi/create" method="POST">
+                            <div class="form-group">
+                                <label for="noi_dung">Nội dung câu hỏi <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="noi_dung" name="noi_dung" rows="3" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cap_do">Cấp độ <span class="text-danger">*</span></label>
+                                <select class="form-control" id="cap_do" name="cap_do" required>
+                                    <option value="">Chọn cấp độ</option>
+                                    <option value="1">Dễ</option>
+                                    <option value="2">Trung bình</option>
+                                    <option value="3">Khó</option>
+                                    <option value="4">Siêu khó</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ma_chuyen_nganh">Chuyên ngành <span class="text-danger">*</span></label>
+                                <select class="form-control select2" id="ma_chuyen_nganh" name="ma_chuyen_nganh[]" multiple required>
+                                    {{#each chuyenNganhs}}
+                                    <option value="{{this.ma_chuyen_nganh}}">{{this.ten_chuyen_nganh}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tags">Tags</label>
+                                <input type="text" class="form-control" id="tags" name="tags" placeholder="Nhập tags, phân cách bằng dấu phẩy">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="trang_thai">Trạng thái</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="trang_thai" name="trang_thai" checked>
+                                    <label class="custom-control-label" for="trang_thai">Hoạt động</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Lưu
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    // Initialize Select2 for chuyen nganh
+    $('#ma_chuyen_nganh').select2({
+        width: '100%'
+    });
+
+    const createQuestionForm = document.getElementById('createQuestionForm');
+
+    // Form submission
+    createQuestionForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = {};
+        
+        console.log('Raw FormData:');
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+        
+        // Handle regular form fields
+        formData.forEach((value, key) => {
+            if (key !== 'ma_chuyen_nganh[]') {
+                data[key] = value;
+            }
+        });
+
+        console.log('Data after regular fields:', data);
+
+        // Handle multiple select field for chuyen nganh
+        const chuyenNganhSelect = document.getElementById('ma_chuyen_nganh');
+        const selectedChuyenNganh = Array.from(chuyenNganhSelect.selectedOptions).map(option => option.value);
+        console.log('Selected chuyen nganh values:', selectedChuyenNganh);
+        data.ma_chuyen_nganh = selectedChuyenNganh;
+
+        // Handle tags - split by comma and trim whitespace
+        const tagsInput = document.getElementById('tags');
+        data.tags = tagsInput.value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+
+        // Handle checkbox field
+        data.trang_thai = document.getElementById('trang_thai').checked ? 1 : 0;
+
+        console.log('Final data to be sent:', data);
+
+        try {
+            const response = await fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            console.log('Server response:', result);
+
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: result.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    window.location.href = '/admin/cau-hoi';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: result.message
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Có lỗi xảy ra khi thêm câu hỏi'
+            });
+        }
+    });
+});
+</script>
+
+{{> admin/footer}} 

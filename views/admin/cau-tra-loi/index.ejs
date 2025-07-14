@@ -1,0 +1,13 @@
+<%- include('../layouts/list', {
+    title: 'Quản lý Câu trả lời',
+    createUrl: '/admin/cau-tra-loi/create',
+    editUrl: '/admin/cau-tra-loi/edit',
+    deleteUrl: '/admin/cau-tra-loi/delete',
+    columns: [
+        { label: 'Mã câu trả lời', field: 'id' },
+        { label: 'Nội dung', field: 'noiDung' },
+        { label: 'Câu hỏi', field: 'cauHoi' },
+        { label: 'Đúng/Sai', field: 'dungSai' }
+    ],
+    items: cauTraLois
+}) %> 

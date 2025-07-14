@@ -1,0 +1,50 @@
+{{> header}}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">{{quiz.title}}</h2>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{quiz.description}}</p>
+                    
+                    <div class="alert alert-info">
+                        <div class="d-flex justify-content-between">
+                            <span>Thời gian: {{quiz.timeLimit}} phút</span>
+                            <span>Số câu hỏi: {{quiz.questionCount}}</span>
+                        </div>
+                    </div>
+
+                    {{#if isStarted}}
+                        <form action="/trac-nghiem/{{quiz.id}}/submit" method="POST">
+                            {{#each questions}}
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Câu {{@index}}: {{this.question}}</h5>
+                                        <div class="list-group">
+                                            {{#each this.options}}
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" type="radio" name="answers[{{../@index}}]" value="{{@index}}">
+                                                    {{this}}
+                                                </label>
+                                            {{/each}}
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                            <button type="submit" class="btn btn-primary">Nộp bài</button>
+                        </form>
+                    {{else}}
+                        <form action="/trac-nghiem/{{quiz.id}}/start" method="POST">
+                            <button type="submit" class="btn btn-primary">Bắt đầu làm bài</button>
+                        </form>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> footer}} 

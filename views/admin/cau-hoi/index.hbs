@@ -1,0 +1,217 @@
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Quản lý Câu hỏi</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-right">
+                    <a href="/admin/cau-hoi/them-moi" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Thêm mới
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách câu hỏi <span class="text-muted"></span></h3>
+                        <div class="card-tools">
+                            <form action="/admin/cau-hoi" method="GET" class="form-inline">
+                                <div class="input-group mr-2">
+                                    <input type="text" name="search" class="form-control" placeholder="Nhập nội dung câu hỏi..." value="{{search}}">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fas fa-search"></i> Tìm kiếm
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <select name="ma_nganh" class="form-control">
+                                        <option value="">Tất cả ngành</option>
+                                        {{#each nganhs}}
+                                        <option value="{{this.ma_nganh}}" {{#if (eq this.ma_nganh ../selectedNganh)}}selected{{/if}}>
+                                            {{this.ten_nganh}}
+                                        </option>
+                                        {{/each}}
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fas fa-filter"></i> Lọc
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã câu hỏi</th>
+                                    <th>Nội dung câu hỏi</th>
+                                    <th>Cấp độ</th>
+                                    <th>Chuyên ngành</th>
+                                    <th>Tags</th>
+                                    <th>Trạng thái</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each cauHois}}
+                                <tr>
+                                    <td>{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
+                                    <td>{{this.ma_cau_hoi}}</td>
+                                    <td>{{this.noi_dung}}</td>
+                                    <td>{{this.cap_do}}</td>
+                                    <td>
+                                        {{#if this.ten_chuyen_nganh}}
+                                            {{#each this.ten_chuyen_nganh}}
+                                                <span class="badge badge-info">{{this}}</span>
+                                            {{/each}}
+                                        {{else}}
+                                            <span class="text-muted">Không có chuyên ngành</span>
+                                        {{/if}}
+                                    </td>
+                                    <td>
+                                        {{#if this.tags}}
+                                            {{#each this.tags}}
+                                                <span class="badge badge-secondary">{{this}}</span>
+                                            {{/each}}
+                                        {{else}}
+                                            <span class="text-muted">Không có tags</span>
+                                        {{/if}}
+                                    </td>
+                                    <td>
+                                        <span class="badge {{#if this.trang_thai}}badge-success{{else}}badge-danger{{/if}}">
+                                            {{#if this.trang_thai}}Hoạt động{{else}}Không hoạt động{{/if}}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="/admin/cau-hoi/edit/{{this.ma_cau_hoi}}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="/admin/cau-hoi/delete/{{this.ma_cau_hoi}}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa câu hỏi này?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    {{> pagination baseUrl="/admin/cau-hoi"}}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle search form submission
+    const searchForm = document.querySelector('form[action="/admin/cau-hoi"]');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchInput = this.querySelector('input[name="search"]');
+            const searchValue = searchInput.value.trim();
+            window.location.href = `/admin/cau-hoi?search=${encodeURIComponent(searchValue)}`;
+        });
+    }
+
+    if (typeof $ !== 'undefined') {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    }
+});
+
+function showToast(icon, title, text) {
+    Swal.fire({
+        icon: icon,
+        title: title,
+        text: text,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true
+    });
+}
+
+// Handle form submissions
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            showToast('success', 'Thành công!', data.message);
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            showToast('error', 'Lỗi!', data.message);
+        }
+    });
+});
+
+// Handle delete
+function deleteCauHoi(id) {
+    Swal.fire({
+        title: 'Bạn có chắc chắn?',
+        text: "Bạn không thể hoàn tác sau khi xóa!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Có, xóa nó!',
+        cancelButtonText: 'Hủy'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`/admin/cau-hoi/delete/${id}`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('success', 'Thành công!', data.message);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showToast('error', 'Lỗi!', data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('error', 'Lỗi!', 'Có lỗi xảy ra khi xóa câu hỏi');
+            }
+        }
+    });
+}
+</script>
+
+{{> admin/footer}} 

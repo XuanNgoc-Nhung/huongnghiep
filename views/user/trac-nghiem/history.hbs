@@ -1,0 +1,50 @@
+{{> header}}
+
+<div class="container py-5">
+    <h1 class="mb-4">Lịch sử làm bài trắc nghiệm</h1>
+
+    <div class="row">
+        <div class="col-12">
+            {{#if history}}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Bài trắc nghiệm</th>
+                                <th>Thời gian làm</th>
+                                <th>Điểm số</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each history}}
+                                <tr>
+                                    <td>{{this.quizTitle}}</td>
+                                    <td>{{this.completedAt}}</td>
+                                    <td>{{this.score}}/{{this.totalQuestions}}</td>
+                                    <td>
+                                        {{#if this.isPassed}}
+                                            <span class="badge bg-success">Đạt</span>
+                                        {{else}}
+                                            <span class="badge bg-danger">Không đạt</span>
+                                        {{/if}}
+                                    </td>
+                                    <td>
+                                        <a href="/user/trac-nghiem/{{this.quizId}}/result" class="btn btn-sm btn-primary">Xem chi tiết</a>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            {{else}}
+                <div class="alert alert-info">
+                    Bạn chưa làm bài trắc nghiệm nào.
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</div>
+
+{{> footer}} 

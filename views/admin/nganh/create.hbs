@@ -1,0 +1,56 @@
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Thêm mới ngành</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-right">
+                    <a href="/admin/nganh" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin ngành</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form action="/admin/nganh/create" method="POST">
+                            <div class="form-group">
+                                <label for="maNganh">Mã ngành</label>
+                                <input type="text" class="form-control" id="maNganh" name="maNganh" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ten">Tên ngành</label>
+                                <input type="text" class="form-control" id="ten" name="ten" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="moTa">Mô tả</label>
+                                <textarea class="form-control" id="moTa" name="moTa" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+<!-- /.content --> 

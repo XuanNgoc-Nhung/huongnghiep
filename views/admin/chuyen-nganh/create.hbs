@@ -1,0 +1,75 @@
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Thêm mới chuyên ngành</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-right">
+                    <a href="/admin/chuyen-nganh" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin chuyên ngành</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form action="/admin/chuyen-nganh/create" method="POST">
+                            <div class="form-group">
+                                <label for="maChuyenNganh">Mã chuyên ngành</label>
+                                <input type="text" class="form-control" id="maChuyenNganh" name="maChuyenNganh" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ten">Tên chuyên ngành</label>
+                                <input type="text" class="form-control" id="ten" name="ten" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nganhs">Ngành</label>
+                                <select class="form-control select2" id="nganhs" name="nganhs[]" multiple required>
+                                    {{#each nganhs}}
+                                    <option value="{{this.id}}">{{this.ten}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="moTa">Mô tả</label>
+                                <textarea class="form-control" id="moTa" name="moTa" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+
+<script>
+</script>

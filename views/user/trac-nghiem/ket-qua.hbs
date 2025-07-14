@@ -1,0 +1,596 @@
+<div class="container mt-2 bg-light rounded-4">
+    {{> buoc-trac-nghiem currentStep=7}}
+    <div class="bg-white rounded-4 p-4 p-md-5">
+            <h1 class="h3 mb-0">🎉 Kết quả trắc nghiệm của bạn</h1>
+            <div class="mb-2 mt-2">Tổng điểm theo từng nhóm ngành:</div>
+            <div class="d-flex align-items-center gap-2 mb-4 kq-nganh">
+                <div class="mb-4 w-100" style="background: #f8f9fa; border-radius: 16px;">
+                    <div class="overflow-auto"
+                        style="min-height: 300px; width: 100%; display: flex; justify-content: center; align-items: center;">
+                        <div style="min-width: 600px; width: 100%; height: 400px;" class="chart-container">
+                            <canvas id="nganhRadarChart" style="width: 100%; height: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{!-- section 2 --}}
+            <div class="row mt-4 align-items-stretch">
+                <!-- Bảng xếp hạng nhóm ngành -->
+                <div class="col-md-7 mb-4 h-100">
+                    <div class="h-100 d-flex flex-column justify-content-center"
+                        style="background: #f8f9fa; border-radius: 16px;">
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" class="text-center">Xếp hạng</th>
+                                        <th scope="col">Nhóm ngành</th>
+                                        <th scope="col">Điểm của bạn</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-success">
+                                        <td class="text-center">1</td>
+                                        <td>
+                                            Kinh doanh & Quản lý<br>
+                                            <span class="text-muted small">(Business & Management)</span>
+                                        </td>
+                                        <td>37 điểm</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">2</td>
+                                        <td>
+                                            Kỹ thuật & Công nghệ<br>
+                                            <span class="text-muted small">(Engineering & Technology)</span>
+                                        </td>
+                                        <td>34 điểm</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">3</td>
+                                        <td>
+                                            Nghệ thuật & Sáng tạo<br>
+                                            <span class="text-muted small">(Arts & Creativity)</span>
+                                        </td>
+                                        <td>31 điểm</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">4</td>
+                                        <td>
+                                            Khoa học & Nghiên cứu<br>
+                                            <span class="text-muted small">(Science & Research)</span>
+                                        </td>
+                                        <td>28 điểm</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">5</td>
+                                        <td>
+                                            Quân đội, Công an, Hàng không<br>
+                                            <span class="text-muted small">(Military, Police & Aviation)</span>
+                                        </td>
+                                        <td>26 điểm</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">6</td>
+                                        <td>
+                                            Giáo dục & Công tác xã hội<br>
+                                            <span class="text-muted small">(Education & Social Work)</span>
+                                        </td>
+                                        <td>22 điểm</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Huy chương nhóm ngành cao nhất -->
+                <div class="col-md-5 d-flex align-items-center justify-content-center h-100">
+                    <div class="w-100 text-center h-100 d-flex flex-column justify-content-center"
+                        style="background: #f8f9fa; border-radius: 16px; padding: 24px;">
+                        <!-- SVG huy chương và nội dung giữ nguyên -->
+                        <div style="font-weight: bold; font-size: 20px; margin-bottom: 8px;">Nhóm ngành có điểm
+                            cao nhất
+                        </div>
+                        <hr style="margin: 0 auto 24px auto; width: 90%; border-top: 1.5px solid #000000;">
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <svg width="160" height="180" viewBox="0 0 160 180" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <!-- Ribbon -->
+                                <rect x="48" y="120" width="20" height="50" rx="8" fill="#4F46E5" />
+                                <rect x="92" y="120" width="20" height="50" rx="8" fill="#EF4444" />
+                                <rect x="70" y="120" width="20" height="50" rx="8" fill="#fff" />
+                                <!-- Medal -->
+                                <circle cx="80" cy="80" r="70" fill="#FFD700" stroke="#F7B500" stroke-width="8" />
+                                <circle cx="80" cy="80" r="58" fill="#FFEB99" />
+                                <!-- Medal border effect -->
+                                <ellipse cx="80" cy="80" rx="54" ry="54" fill="#FFE066" />
+                                <!-- Score -->
+                                <text x="80" y="95" text-anchor="middle" font-size="56" font-weight="bold"
+                                    fill="#A97B1C" font-family="inherit">37</text>
+                                <text x="80" y="120" text-anchor="middle" font-size="18" font-weight="bold"
+                                    fill="#A97B1C" font-family="inherit">điểm</text>
+                            </svg>
+                            <div class="mt-4 fw-bold" style="color: #2563eb; font-size: 22px;">Kinh doanh & Quản
+                                lý
+                            </div>
+                            <div style="color: #2563eb; font-size: 16px; font-weight: 500;">(Business &
+                                Management)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{!-- section 3 --}}
+            <div class="row mt-5">
+                <div class="col-12 d-flex flex-column">
+                    <div class="fw-bold mb-3" style="font-size: 22px; display: flex; gap: 8px;">
+                        <span style="font-size: 20px;">🎯</span> Nhóm ngành nghề phù hợp với bạn
+                    </div>
+                    <div class="hexagon-career d-flex flex-column align-items-center justify-content-center">
+                        <img src="/images/svg/business-management.svg" alt="Business & Management"
+                            style="width: 90px; margin-bottom: 12px;" />
+                        <div class="fw-bold" style="color: #fff; font-size: 18px;">Kinh doanh & Quản lý</div>
+                        <div style="color: #fff; font-size: 15px;">(Business & Management)</div>
+                    </div>
+                </div>
+            </div>
+            {{!-- section 4 --}}
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="rounded-4 p-4 p-md-5 d-flex flex-column gap-3"
+                        style="background: #f8f9ff; border: 1.5px solid #e0e7ef;">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 28%; font-weight: 600;">Nhóm ngành phù hợp với bạn</th>
+                                    <th style="width: 14%; font-weight: 600;">Điểm của bạn</th>
+                                    <th style="width: 58%; font-weight: 600;">Mô tả</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600;">Kinh doanh & Quản lý<br><span
+                                                class="text-muted small">(Business & Management)</span></div>
+                                    </td>
+                                    <td>
+                                        <span style="font-weight: 600; font-size: 18px; color: #5EB47C;">37
+                                            điểm</span>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 600; margin-bottom: 6px;">Yêu cầu phù hợp:
+                                        </div>
+                                        <ul style="margin-bottom: 8px; padding-left: 18px;">
+                                            <li>Khả năng lãnh đạo: Cần có khả năng quản lý đội nhóm, ra quyết
+                                                định, và điều phối công việc hiệu quả.</li>
+                                            <li>Kỹ năng giao tiếp: Có khả năng giao tiếp tốt, thuyết phục và tạo
+                                                mối quan hệ trong môi trường công việc.</li>
+                                            <li>Tư duy chiến lược và tổ chức: Năng lực phân tích, lập kế hoạch
+                                                và tổ chức công việc để đạt được mục tiêu dài hạn.</li>
+                                            <li>Tinh thần khởi nghiệp & đổi mới: Sự sáng tạo và dám đổi mới
+                                                trong kinh doanh.</li>
+                                            <li>Kỹ năng giải quyết vấn đề: Khả năng đưa ra giải pháp cho các vấn
+                                                đề kinh doanh, tài chính và nhân sự.</li>
+                                        </ul>
+                                        <div style="font-weight: 600; margin-bottom: 6px;">Phù hợp với học sinh
+                                            có:</div>
+                                        <ul style="padding-left: 18px;">
+                                            <li>Tính cách quyết đoán, mạnh mẽ, sáng tạo và yêu thích sự đổi mới.
+                                            </li>
+                                            <li>Khả năng làm việc nhóm và xây dựng mối quan hệ tốt với người
+                                                khác.</li>
+                                            <li>Sự quan tâm đến việc tạo ra giá trị và phát triển kinh doanh.
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {{!-- section 5 --}}
+            <div class="row mt-5">
+                <div class="col-12">
+                    <!-- Section 5: Chuyên ngành đã chọn & Thông tin khảo sát -->
+                    <div class="mb-4">
+                        <div class="fw-bold" style="font-size: 28px;">Chuyên ngành đã chọn</div>
+                        <div class="rounded-3" style="background: #4F9CF9; color: #fff; padding: 28px 0 18px 0; font-size: 2rem; font-weight: 700; text-align: center;">
+                            Kinh doanh & Quản lý<br>
+                            <span style="font-size: 1.5rem; font-weight: 600;">(Business & Management)</span>
+                        </div>
+                        <div class="rounded-bottom-4" style="background: #f2faf7; padding: 18px 32px; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; border: 1px solid #e0e7ef; border-top: none;">
+                            <div style="font-weight: 700; font-size: 1.1rem;">Quản trị, Quản lý, Điều hành</div>
+                            <ul class="mb-0" style="padding-left: 20px;">
+                                <li>Quản trị kinh doanh</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="fw-bold" style="font-size: 26px;">Thông tin khảo sát của bạn</div>
+                        <ul style="font-size: 1.15rem; margin-top: 18px;">
+                            <li>Bảng điểm gần nhất của bạn: Điểm thi thử THPTQG 29.5 điểm</li>
+                            <li>Khả năng chi trả của bạn cho 1 năm học (triệu đồng): 40 triệu.</li>
+                            <li>Chứng chỉ Tiếng Anh của bạn: IELTS 7.0</li>
+                            <li>Điểm SAT/ACT:</li>
+                            <li>Tôn giáo</li>
+                            <li>Ngoại hình của bạn (chiều cao, cân nặng):</li>
+                            <li>Bệnh lý:</li>
+                            <li>Tỉnh/thành bạn muốn học: Hà Nội</li>
+                            <li>Tỉnh/thành bạn đang ở:</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="fw-bold mb-3" style="font-size: 28px;">Kết quả trường đại học phù hợp với bạn</div>
+                    <div class="accordion" id="universityAccordion">
+                        <div class="accordion-item" style="border-radius: 16px 16px 0 0; overflow: hidden; border: none;">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="background: #f2faf7; font-size: 1.25rem;">
+                                    Đại học Thương mại
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#universityAccordion">
+                                <div class="accordion-body" style="font-size: 1.1rem;">
+                                    <ul style="margin-bottom: 0; padding-left: 20px;">
+                                        <li>Tỉnh/thành: Hà Nội</li>
+                                        <li>Ngành đào tạo: Quản trị kinh doanh</li>
+                                        <li>Chỉ tiêu [2024]: 500</li>
+                                        <li>Phương thức xét tuyển: THPT, học bạ</li>
+                                        <li>Điểm chuẩn [2022–2024]: 26.5 – 26 – 27</li>
+                                        <li>Học phí dự kiến [triệu đồng/năm]: 18 – 24 triệu</li>
+                                        <li>Tỷ lệ có việc làm sau tốt nghiệp: 80%</li>
+                                        <li>Điều kiện khác: Không.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item" style="border: none; border-top: 1px solid #e0e7ef;">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="font-size: 1.15rem;">
+                                    Đại học Kinh tế – Đại học Quốc gia Hà Nội
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#universityAccordion">
+                                <div class="accordion-body" style="font-size: 1.1rem;">
+                                    <ul style="margin-bottom: 0; padding-left: 20px;">
+                                        <li>Tỉnh/thành: Hà Nội</li>
+                                        <li>Ngành đào tạo: Kinh tế quốc tế</li>
+                                        <li>Chỉ tiêu [2024]: 400</li>
+                                        <li>Phương thức xét tuyển: THPT, học bạ, đánh giá năng lực</li>
+                                        <li>Điểm chuẩn [2022–2024]: 27.0 – 27.5 – 28.0</li>
+                                        <li>Học phí dự kiến [triệu đồng/năm]: 22 – 28 triệu</li>
+                                        <li>Tỷ lệ có việc làm sau tốt nghiệp: 85%</li>
+                                        <li>Điều kiện khác: Ưu tiên có chứng chỉ tiếng Anh quốc tế.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item" style="border: none; border-top: 1px solid #e0e7ef;">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="font-size: 1.15rem;">
+                                    Đại học Kinh tế Quốc dân
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#universityAccordion">
+                                <div class="accordion-body" style="font-size: 1.1rem;">
+                                    <ul style="margin-bottom: 0; padding-left: 20px;">
+                                        <li>Tỉnh/thành: Hà Nội</li>
+                                        <li>Ngành đào tạo: Kinh tế</li>
+                                        <li>Chỉ tiêu [2024]: 550</li>
+                                        <li>Phương thức xét tuyển: THPT, học bạ</li>
+                                        <li>Điểm chuẩn [2022–2024]: 27.5 – 28.0 – 28.2</li>
+                                        <li>Học phí dự kiến [triệu đồng/năm]: 20 – 25 triệu</li>
+                                        <li>Tỷ lệ có việc làm sau tốt nghiệp: 90%</li>
+                                        <li>Điều kiện khác: Không.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item" style="border: none; border-top: 1px solid #e0e7ef;">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" style="font-size: 1.15rem;">
+                                    Đại học Ngoại thương
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#universityAccordion">
+                                <div class="accordion-body" style="font-size: 1.1rem;">
+                                    <ul style="margin-bottom: 0; padding-left: 20px;">
+                                        <li>Tỉnh/thành: Hà Nội</li>
+                                        <li>Ngành đào tạo: Kinh tế đối ngoại</li>
+                                        <li>Chỉ tiêu [2024]: 350</li>
+                                        <li>Phương thức xét tuyển: THPT, học bạ, chứng chỉ quốc tế</li>
+                                        <li>Điểm chuẩn [2022–2024]: 28.0 – 28.3 – 28.5</li>
+                                        <li>Học phí dự kiến [triệu đồng/năm]: 25 – 30 triệu</li>
+                                        <li>Tỷ lệ có việc làm sau tốt nghiệp: 95%</li>
+                                        <li>Điều kiện khác: Ưu tiên nữ, có ngoại ngữ tốt.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item" style="border: none; border-top: 1px solid #e0e7ef;">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive" style="font-size: 1.15rem;">
+                                    Học viện Ngân hàng
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#universityAccordion">
+                                <div class="accordion-body" style="font-size: 1.1rem;">
+                                    <ul style="margin-bottom: 0; padding-left: 20px;">
+                                        <li>Tỉnh/thành: Hà Nội</li>
+                                        <li>Ngành đào tạo: Tài chính - Ngân hàng</li>
+                                        <li>Chỉ tiêu [2024]: 300</li>
+                                        <li>Phương thức xét tuyển: THPT, học bạ</li>
+                                        <li>Điểm chuẩn [2022–2024]: 25.5 – 26.0 – 26.5</li>
+                                        <li>Học phí dự kiến [triệu đồng/năm]: 16 – 20 triệu</li>
+                                        <li>Tỷ lệ có việc làm sau tốt nghiệp: 88%</li>
+                                        <li>Điều kiện khác: Không.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item" style="border-radius: 0 0 16px 16px; border: none; border-top: 1px solid #e0e7ef;">
+                            <h2 class="accordion-header" id="headingSix">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix" style="font-size: 1.15rem;">
+                                    Đại học Thăng Long
+                                </button>
+                            </h2>
+                            <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#universityAccordion">
+                                <div class="accordion-body" style="font-size: 1.1rem;">
+                                    <ul style="margin-bottom: 0; padding-left: 20px;">
+                                        <li>Tỉnh/thành: Hà Nội</li>
+                                        <li>Ngành đào tạo: Quản trị kinh doanh</li>
+                                        <li>Chỉ tiêu [2024]: 200</li>
+                                        <li>Phương thức xét tuyển: THPT, học bạ, phỏng vấn</li>
+                                        <li>Điểm chuẩn [2022–2024]: 24.0 – 24.5 – 25.0</li>
+                                        <li>Học phí dự kiến [triệu đồng/năm]: 30 – 35 triệu</li>
+                                        <li>Tỷ lệ có việc làm sau tốt nghiệp: 75%</li>
+                                        <li>Điều kiện khác: Không.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="fw-bold mb-3" style="font-size: 28px;">Bảng so sánh</div>
+                    <div class="table-responsive rounded-4" style="background: #f8f9fa; border: 1.5px solid #e0e7ef;">
+                        <table class="table table-bordered align-middle mb-0" style="font-size: 0.97rem; min-width: 1300px;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 300px; position: sticky; left: 0; background: #f8f9fa; z-index: 2; white-space: nowrap;" rowspan="2">Tên trường</th>
+                                    <th style="white-space: nowrap;" rowspan="2">Tỉnh/thành</th>
+                                    <th style="white-space: nowrap;" rowspan="2">Ngành đào tạo</th>
+                                    <th style="white-space: nowrap;" rowspan="2">Chỉ tiêu [2024]</th>
+                                    <th style="white-space: nowrap;" rowspan="2">Phương thức xét tuyển</th>
+                                    <th colspan="3" class="text-center" style="white-space: nowrap;">Điểm chuẩn</th>
+                                    <th style="white-space: nowrap;" rowspan="2">Học phí dự kiến<br><span class="small">[triệu đồng/năm]</span></th>
+                                    <th style="white-space: nowrap;" rowspan="2">Tỷ lệ có việc làm<br>sau tốt nghiệp</th>
+                                    <th style="white-space: nowrap;" rowspan="2">Điều kiện khác</th>
+                                    <th style="width: 200px; white-space: nowrap;" rowspan="2"></th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" style="white-space: nowrap;">2022</th>
+                                    <th class="text-center" style="white-space: nowrap;">2023</th>
+                                    <th class="text-center" style="white-space: nowrap;">2024</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="position: sticky; left: 0; background: #fff; z-index: 1;">Đại học Thương mại</td>
+                                    <td>Hà Nội</td>
+                                    <td>Quản trị kinh doanh</td>
+                                    <td>500</td>
+                                    <td>THPT, học bạ</td>
+                                    <td>26.5</td>
+                                    <td>26</td>
+                                    <td>27</td>
+                                    <td>18–24 triệu</td>
+                                    <td>80%</td>
+                                    <td></td>
+                                    <td><a href="#"  target="_blank">Chi tiết</a></td>
+                                </tr>
+                                <tr>
+                                    <td style="position: sticky; left: 0; background: #fff; z-index: 1;">Đại học Kinh tế – ĐHQG Hà Nội</td>
+                                    <td>Hà Nội</td>
+                                    <td>Quản trị kinh doanh</td>
+                                    <td>300</td>
+                                    <td>THPT, ĐGNL, học bạ</td>
+                                    <td>26</td>
+                                    <td>26.5</td>
+                                    <td>27.7</td>
+                                    <td>20–25 triệu</td>
+                                    <td>89%</td>
+                                    <td>IELTS 6.0 trở lên</td>
+                                    <td><a href="#"  target="_blank">Chi tiết</a></td>
+                                </tr>
+                                <tr>
+                                    <td style="position: sticky; left: 0; background: #fff; z-index: 1;">Đại học Kinh tế Quốc dân</td>
+                                    <td>Hà Nội</td>
+                                    <td>Quản trị kinh doanh</td>
+                                    <td>550</td>
+                                    <td>THPT, học bạ, ĐGNL</td>
+                                    <td>27.5</td>
+                                    <td>27</td>
+                                    <td>28.5</td>
+                                    <td>20–30 triệu</td>
+                                    <td>90%</td>
+                                    <td>IELTS 6.0 trở lên</td>
+                                    <td><a href="#"  target="_blank">Chi tiết</a></td>
+                                </tr>
+                                <tr>
+                                    <td style="position: sticky; left: 0; background: #fff; z-index: 1;">Đại học Ngoại thương</td>
+                                    <td>Hà Nội</td>
+                                    <td>Quản trị kinh doanh</td>
+                                    <td>450</td>
+                                    <td>THPT, chứng chỉ quốc tế, học bạ</td>
+                                    <td>28.2</td>
+                                    <td>28.5</td>
+                                    <td>29</td>
+                                    <td>22–35 triệu</td>
+                                    <td>96%</td>
+                                    <td>IELTS 6.5 trở lên</td>
+                                    <td><a href="#"  target="_blank">Chi tiết</a></td>
+                                </tr>
+                                <tr>
+                                    <td style="position: sticky; left: 0; background: #fff; z-index: 1;">Học viện Ngân hàng</td>
+                                    <td>Hà Nội</td>
+                                    <td>Quản trị kinh doanh</td>
+                                    <td>430</td>
+                                    <td>THPT, học bạ, ĐGNL</td>
+                                    <td>25.75</td>
+                                    <td>26.5</td>
+                                    <td>27.5</td>
+                                    <td>25–35 triệu</td>
+                                    <td>98%</td>
+                                    <td></td>
+                                    <td><a href="#"  target="_blank">Chi tiết</a></td>
+                                </tr>
+                                <tr>
+                                    <td style="position: sticky; left: 0; background: #fff; z-index: 1;">Đại học Thăng Long</td>
+                                    <td>Hà Nội</td>
+                                    <td>Quản trị kinh doanh</td>
+                                    <td>600</td>
+                                    <td>THPT, chứng chỉ quốc tế, học bạ</td>
+                                    <td>24.5</td>
+                                    <td>25</td>
+                                    <td>26.5</td>
+                                    <td>30–40 triệu</td>
+                                    <td>92%</td>
+                                    <td></td>
+                                    <td><a href="#"  target="_blank">Chi tiết</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mb-3" style="margin-top: 32px;">
+                        <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 18px;">
+                            <span style="font-size: 22px; line-height: 1.2;">📌</span>
+                            <div>
+                                <span style="font-weight: bold; font-size: 1.08rem;">Lưu ý quan trọng:</span>
+                                <div style="font-size: 1.07rem; font-weight: 400; margin-top: 2px;">
+                                    Các kết quả và dữ liệu hiển thị trên hệ thống chỉ mang tính tham khảo. Các thông tin được tổng hợp từ các nguồn công khai và có thể thay đổi theo từng năm. Bạn nên liên hệ trực tiếp với trường đại học để có quyết định chính xác nhất cho mình nhé.
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 32px;">
+                            <span style="font-size: 22px; line-height: 1.2;">😊</span>
+                            <div>
+                                <span style="font-weight: bold; font-size: 1.08rem;">Bạn có thể làm lại trắc nghiệm bất cứ lúc nào!</span>
+                                <div style="font-size: 1.07rem; font-weight: 400; margin-top: 2px;">
+                                    Nếu bạn muốn khám phá thêm về sở thích, định hướng nghề nghiệp hoặc thay đổi nguyện vọng học tập, hãy nhấn "Làm lại trắc nghiệm" để có kết quả mới phù hợp hơn với bạn hiện tại nhé!
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-warning rounded-pill px-4 text-white" onclick="window.location.href='/trac-nghiem/bat-dau'">
+                            Làm lại trắc nghiệm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('nganhRadarChart').getContext('2d');
+
+        // Cấu hình màu sắc
+        const colors = {
+            business: '#007bff',
+            engineering: '#28a745',
+            arts: '#dc3545',
+            science: '#6f42c1',
+            military: '#17a2b8',
+            education: '#ffc107'
+        };
+
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    'Kinh doanh & Quản lý',
+                    'Kỹ thuật & Công nghệ',
+                    'Nghệ thuật & Sáng tạo',
+                    'Khoa học & Nghiên cứu',
+                    'Quân đội, Công an, Hàng không',
+                    'Giáo dục & Công tác xã hội'
+                ],
+                datasets: [{
+                    label: 'Tổng điểm',
+                    data: [37, 34, 31, 28, 26, 22],
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: Object.values(colors),
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: Object.values(colors),
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: {
+                            size: 14
+                        },
+                        bodyFont: {
+                            size: 13
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true,
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 40,
+                        pointLabels: {
+                            font: {
+                                size: function () {
+                                    return window.innerWidth < 768 ? 11 : 13;
+                                },
+                                weight: '500'
+                            },
+                            color: Object.values(colors),
+                            padding: function () {
+                                return window.innerWidth < 768 ? 15 : 20;
+                            }
+                        },
+                        ticks: {
+                            stepSize: 10,
+                            backdropColor: 'transparent',
+                            color: 'rgba(0, 0, 0, 0.5)',
+                            font: {
+                                size: function () {
+                                    return window.innerWidth < 768 ? 9 : 11;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    
+    </script>
+
+{{> user/modal-privacy-policy }}
+{{> user/modal-payment }}

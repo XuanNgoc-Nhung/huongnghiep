@@ -1,0 +1,36 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {{#if (eq path '/admin')}}active{{/if}}" href="/admin">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{#if (eq path '/admin/nganh')}}active{{/if}}" href="/admin/nganh">
+                    <i class="fas fa-graduation-cap"></i>
+                    Quản lý Ngành
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{#if (eq path '/admin/chuyen-nganh')}}active{{/if}}" href="/admin/chuyen-nganh">
+                    <i class="fas fa-book"></i>
+                    Quản lý Chuyên ngành
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{#if (eq path '/admin/cau-hoi')}}active{{/if}}" href="/admin/cau-hoi">
+                    <i class="fas fa-question-circle"></i>
+                    Quản lý Câu hỏi
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{#if (eq path '/admin/cau-tra-loi')}}active{{/if}}" href="/admin/cau-tra-loi">
+                    <i class="fas fa-comments"></i>
+                    Quản lý Câu trả lời
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav> 

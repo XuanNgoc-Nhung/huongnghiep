@@ -1,0 +1,93 @@
+{{> admin/header}}
+
+<div class="container-fluid">
+    <div class="row">
+        {{> admin/sidebar}}
+        
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Chỉnh sửa Câu hỏi</h1>
+            </div>
+
+            <form action="/admin/cau-hoi/sua/{{cauHoi._id}}" method="POST">
+                <div class="mb-3">
+                    <label for="content" class="form-label">Nội dung câu hỏi</label>
+                    <textarea class="form-control" id="content" name="content" rows="3" required>{{cauHoi.content}}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="type" class="form-label">Loại câu hỏi</label>
+                    <select class="form-select" id="type" name="type" required>
+                        <option value="">Chọn loại câu hỏi</option>
+                        <option value="single" {{#if (eq cauHoi.type 'single')}}selected{{/if}}>Câu hỏi đơn</option>
+                        <option value="multiple" {{#if (eq cauHoi.type 'multiple')}}selected{{/if}}>Câu hỏi nhiều lựa chọn</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="difficulty" class="form-label">Độ khó</label>
+                    <select class="form-select" id="difficulty" name="difficulty" required>
+                        <option value="">Chọn độ khó</option>
+                        <option value="easy" {{#if (eq cauHoi.difficulty 'easy')}}selected{{/if}}>Dễ</option>
+                        <option value="medium" {{#if (eq cauHoi.difficulty 'medium')}}selected{{/if}}>Trung bình</option>
+                        <option value="hard" {{#if (eq cauHoi.difficulty 'hard')}}selected{{/if}}>Khó</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nganhId" class="form-label">Ngành</label>
+                    <select class="form-select" id="nganhId" name="nganhId" required>
+                        <option value="">Chọn ngành</option>
+                        {{#each nganhs}}
+                        <option value="{{this._id}}" {{#if (eq this._id ../cauHoi.nganhId)}}selected{{/if}}>{{this.tenNganh}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Các lựa chọn</label>
+                    <div id="options-container">
+                        {{#each cauHoi.options}}
+                        <div class="option-item mb-2">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="options[]" value="{{this}}" required>
+                                <div class="input-group-text">
+                                    <input type="radio" name="correctAnswer" value="{{@index}}" {{#if (eq @index ../cauHoi.correctAnswer)}}checked{{/if}} required>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <button type="button" class="btn btn-secondary mt-2" onclick="addOption()">Thêm lựa chọn</button>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                    <a href="/admin/cau-hoi" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+
+<script>
+let optionCount = {{cauHoi.options.length}};
+
+function addOption() {
+    const container = document.getElementById('options-container');
+    const newOption = document.createElement('div');
+    newOption.className = 'option-item mb-2';
+    newOption.innerHTML = `
+        <div class="input-group">
+            <input type="text" class="form-control" name="options[]" placeholder="Nhập lựa chọn" required>
+            <div class="input-group-text">
+                <input type="radio" name="correctAnswer" value="${optionCount}" required>
+            </div>
+        </div>
+    `;
+    container.appendChild(newOption);
+    optionCount++;
+}
+</script>
+
+{{> admin/footer}} 

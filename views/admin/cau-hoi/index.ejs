@@ -1,0 +1,15 @@
+<%- include('../layouts/list', {
+    title: 'Quản lý Câu hỏi',
+    createUrl: '/admin/cau-hoi/create',
+    editUrl: '/admin/cau-hoi/edit',
+    deleteUrl: '/admin/cau-hoi/delete',
+    columns: [
+        { label: 'Mã câu hỏi', field: 'ma_cau_hoi' },
+        { label: 'Nội dung', field: 'noi_dung' },
+        { label: 'Cấp độ', field: 'cap_do' },
+        { label: 'Chuyên ngành', field: 'ten_chuyen_nganh' },
+        { label: 'Tags', field: 'tags' },
+        { label: 'Trạng thái', field: 'trang_thai' }
+    ],
+    items: cauHois
+}) %> 

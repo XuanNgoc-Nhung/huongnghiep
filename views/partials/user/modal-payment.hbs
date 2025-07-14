@@ -1,0 +1,281 @@
+<!-- Modal Thanh Toán & Modal Thành Công (dùng chung) -->
+<style>
+  #paymentModal .modal-content {
+    font-size: 0.89rem;
+    padding: 0;
+  }
+
+  #paymentModal .modal-header,
+  #paymentModal .modal-body {
+    padding: 12px 10px 10px 16px !important;
+  }
+
+  #paymentModal .pay-method-btn {
+    font-size: 0.98rem;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 8px 0;
+    border: 2px solid #e0e7ef;
+    background: #f8fafc;
+    color: #22c55e;
+    transition: all 0.2s;
+  }
+
+  #paymentModal .pay-method-btn.active {
+    background: #22c55e;
+    color: #fff;
+    border-color: #22c55e;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.08);
+  }
+
+  #paymentModal .pay-method-btn i {
+    margin-right: 5px;
+  }
+
+  #paymentModal .pay-guide {
+    font-size: 0.89rem;
+    margin-bottom: 0.5rem;
+  }
+
+  #paymentModal .alert {
+    padding: 8px 10px;
+    margin-bottom: 8px;
+  }
+
+  #paymentModal .border.rounded-3.p-2 {
+    padding: 6px 10px !important;
+    font-size: 0.89rem;
+  }
+
+  #paymentModal .mt-2,
+  #paymentModal .mb-2,
+  #paymentModal .mt-3,
+  #paymentModal .mt-4 {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  #paymentModal .spinner-border {
+    width: 1rem;
+    height: 1rem;
+  }
+</style>
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="false">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="border-radius: 20px;">
+      <div class="modal-header" id="paymentModalHeader">
+        <h5 class="modal-title" id="paymentModalLabel" style="font-weight: bold; color: #22c55e; font-size: 1.2rem;">
+          <i class="fa fa-check-circle" style="color: #22c55e;"></i> CareerTest
+        </h5>
+        {{!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="paymentModalCloseBtn"></button> --}}
+      </div>
+      <div class="modal-body" style="padding: 24px 16px;">
+        <div style="font-size: 1.05rem; font-weight: 600; color: #e11d48; margin-bottom: 8px;">
+          <i class="fa fa-heart"></i> Đã hoàn tất phân tích!
+        </div>
+        <div style="margin-bottom: 12px; font-size: 0.98rem;">Hệ thống đã phân tích xong kết quả. Để xem kết quả đầy đủ,
+          vui lòng thanh toán <b>15.000 đồng</b>.</div>
+        <div class="row mb-3">
+          <div class="col-6">
+            <button id="btnPayBank" class="pay-method-btn w-100 active" type="button">
+              <i class="fa fa-qrcode"></i> Chuyển khoản (QR code)
+            </button>
+          </div>
+          <div class="col-6">
+            <button id="btnPaySMS" class="pay-method-btn w-100" type="button">
+              <i class="fa fa-sms"></i> SMS
+            </button>
+          </div>
+        </div>
+        <div id="payGuideBank" class="pay-guide">
+          <div
+            style="border:1px solid #22c55e; border-radius:12px; padding:12px 20px 12px 20px; background:#fff; color:#222; font-size:1em;">
+            <b>Lưu ý khi chuyển khoản thanh toán:</b>
+            <ol style="margin-top: 8px; margin-bottom: 8px; padding-left: 18px;">
+              <li>Nội dung chuyển khoản chính xác<br>
+                <span style="font-size: 0.95em;">Vui lòng ghi đúng cú pháp: <b>HN15 [SĐT của bạn]</b> trong phần nội
+                  dung chuyển khoản. Ví dụ: HN15 0987654321.</span>
+              </li>
+              <li>Chuyển đúng số tiền<br>
+                <span style="font-size: 0.95em;">Số tiền thanh toán: <b>15.000 đồng/lượt xem kết quả</b>.</span>
+              </li>
+              <li>Thời gian xử lý<br>
+                <span style="font-size: 0.95em;">Hệ thống thường xác nhận tự động trong 1–2 phút.<br>Nếu sau 5 phút chưa
+                  mở kết quả, bạn có thể liên hệ hỗ trợ để kiểm tra.</span>
+              </li>
+            </ol>
+            <b>Liên hệ:</b><br>
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <i class="fa fa-phone"></i> <a href="tel:0993588883">0993 588 883</a>
+            </span>
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <i class="fa fa-envelope"></i> <a
+                href="mailto:careertest.com.vn@gmail.com">careertest.com.vn@gmail.com</a>
+            </span>
+            <div style="margin-top: 8px; font-size: 0.95em;">
+              Bằng cách thanh toán, bạn đồng ý với <a href="#" target="_blank">Chính sách thanh toán</a> và <a href="#"
+                target="_blank">Điều khoản sử dụng</a> của chúng tôi.
+            </div>
+            <div class="row mt-2 mb-2" style="align-items: center;">
+              <div class="col-8">
+                <div>
+                  <table style="width:100%; font-size:0.95em; border-collapse:collapse;">
+                    <tr>
+                      <td style="font-weight:bold; border:1px solid #e0e7ef; padding:8px;">Ngân hàng</td>
+                      <td style="border:1px solid #e0e7ef; padding:8px;">Ngân hàng Techcombank</td>
+                      <td style="border:1px solid #e0e7ef; padding:8px;"></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold; border:1px solid #e0e7ef; padding:8px;">Số tài khoản</td>
+                      <td style="border:1px solid #e0e7ef; padding:8px;"><span
+                          style="user-select: all;">19025379802021</span></td>
+                      <td style="border:1px solid #e0e7ef; padding:8px;"><a href="#"
+                          onclick="navigator.clipboard.writeText('19025379802021');return false;"
+                          style="font-size:0.95em; color:#3b82f6;">Sao chép</a></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold; border:1px solid #e0e7ef; padding:8px;">Chủ tài khoản</td>
+                      <td style="border:1px solid #e0e7ef; padding:8px;">DUONG MANH QUAN</td>
+                      <td style="border:1px solid #e0e7ef; padding:8px;"></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold; border:1px solid #e0e7ef; padding:8px;">Số tiền</td>
+                      <td style="border:1px solid #e0e7ef; padding:8px;">15.000 đồng</td>
+                      <td style="border:1px solid #e0e7ef; padding:8px;"></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold; border:1px solid #e0e7ef; padding:8px;">Nội dung</td>
+                      <td style="border:1px solid #e0e7ef; padding:8px;"><span style="user-select: all;">HN15
+                          0987654321</span></td>
+                      <td style="border:1px solid #e0e7ef; padding:8px;"><a href="#"
+                          onclick="navigator.clipboard.writeText('HN15 0987654321');return false;"
+                          style="font-size:0.95em; color:#3b82f6;">Sao chép</a></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="col-4 text-center">
+                <img src="/images/svg/qr-code.svg" alt="QR code"
+                  style="max-width: 120px; border-radius: 8px; border: 1px solid #e0e7ef; background: #fff; padding: 4px;">
+              </div>
+            </div>
+            <div style="text-align:center; color:#22c55e; font-size:1em; margin-top:12px;">
+              <span class="spinner-border spinner-border-sm" style="vertical-align:middle;"></span>
+              <span style="margin-left:8px; color:#64748b;">Đang chờ bạn thanh toán...</span>
+            </div>
+          </div>
+        </div>
+        <div id="payGuideSMS" class="pay-guide" style="display:none;">
+          <div
+            style="border:1px solid #22c55e; border-radius:12px; padding:12px 20px 12px 20px; background:#fff; color:#222; font-size:1em;">
+            <div style="font-weight:600; font-size:1.08em; margin-bottom:10px;">Lưu ý khi nhắn tin SMS thanh toán:</div>
+            <ol style="margin:0 0 16px 0; padding-left:18px;">
+              <li>Soạn đúng cú pháp tin nhắn
+                <ul style="margin:4px 0 0 0; padding-left:18px;">
+                  <li>Vui lòng ghi đúng cú pháp: HN15 [SĐT của bạn] gửi 888. Ví dụ: HN15 0987654321 gửi 888.</li>
+                  <li>Trong đó HN15 là mã dịch vụ, 888 là đầu số tổng đài.</li>
+                </ul>
+              </li>
+              <li>Sử dụng số điện thoại chính chủ
+                <ul style="margin:4px 0 0 0; padding-left:18px;">
+                  <li>Kết quả sẽ được mở khóa theo số điện thoại đã gửi tin nhắn, vui lòng sử dụng đúng SĐT bạn đăng ký
+                    trên hệ thống.</li>
+                </ul>
+              </li>
+              <li>Thời gian xử lý
+                <ul style="margin:4px 0 0 0; padding-left:18px;">
+                  <li>Hệ thống thường xác nhận tự động trong 1–2 phút.</li>
+                  <li>Nếu sau 5 phút chưa mở kết quả, bạn có thể liên hệ hỗ trợ để kiểm tra.</li>
+                </ul>
+              </li>
+            </ol>
+            <div style="font-weight:600; margin-bottom:8px;">Liên hệ:</div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <i class="fa fa-phone" style="font-size:1.15em;"></i>
+              <a href="tel:0993588883" style="color:#3b82f6; font-weight:500; text-decoration:none;">0993 588 883</a>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+              <i class="fa fa-envelope" style="font-size:1.1em;"></i>
+              <a href="mailto:careertest.com.vn@gmail.com"
+                style="color:#3b82f6; font-weight:500; text-decoration:none;">careertest.com.vn@gmail.com</a>
+            </div>
+            <div style="font-size:0.95em; margin-bottom:18px;">Bằng cách thanh toán, bạn đồng ý với <a href="#"
+                style="color:#3b82f6; text-decoration:underline;" target="_blank">Chính sách thanh toán</a> và <a
+                href="#" style="color:#3b82f6; text-decoration:underline;" target="_blank">Điều khoản sử dụng</a> của
+              chúng tôi.</div>
+            <div style="font-size:2em; font-weight:bold; text-align:center; letter-spacing:1px; margin:18px 0 8px 0;">
+              HN15 [SĐT của bạn] gửi 888
+            </div>
+            <div style="text-align:center; color:#22c55e; font-size:1em; margin-top:12px;">
+              <span class="spinner-border spinner-border-sm" style="vertical-align:middle;"></span>
+              <span style="margin-left:8px; color:#64748b;">Đang chờ bạn thanh toán...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Thanh toán thành công -->
+<div class="modal fade" id="paymentSuccessModal" tabindex="-1" aria-labelledby="paymentSuccessModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 20px; text-align: center;">
+      <div class="modal-body" style="padding: 48px 24px;">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"
+          style="margin-bottom: 24px;">
+          <circle cx="40" cy="40" r="40" fill="#22c55e" fill-opacity="0.15" />
+          <circle cx="40" cy="40" r="32" fill="#22c55e" />
+          <path d="M26 41.5L36 51L54 33" stroke="#fff" stroke-width="5" stroke-linecap="round"
+            stroke-linejoin="round" /></svg>
+        <h2 style="color: #22c55e; font-weight: bold;">Thanh toán thành công!</h2>
+        <p>Bạn đã thanh toán thành công.</p>
+        <button class="btn btn-success mt-3" data-bs-dismiss="modal">Xem kết quả ngay</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Luôn luôn không cho phép đóng modal bằng ESC hoặc click ra ngoài
+    var paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'), {
+      backdrop: 'static',
+      keyboard: false
+    });
+    paymentModal.show();
+    // Ẩn nút đóng nếu có
+    var closeBtn = document.getElementById('paymentModalCloseBtn');
+    if (closeBtn) closeBtn.style.display = 'none';
+
+    // Xử lý chuyển đổi hướng dẫn thanh toán
+    var btnPayBank = document.getElementById('btnPayBank');
+    var btnPaySMS = document.getElementById('btnPaySMS');
+    var payGuideBank = document.getElementById('payGuideBank');
+    var payGuideSMS = document.getElementById('payGuideSMS');
+    btnPayBank.addEventListener('click', function () {
+      btnPayBank.classList.add('active');
+      btnPaySMS.classList.remove('active');
+      payGuideBank.style.display = '';
+      payGuideSMS.style.display = 'none';
+    });
+    btnPaySMS.addEventListener('click', function () {
+      btnPaySMS.classList.add('active');
+      btnPayBank.classList.remove('active');
+      payGuideBank.style.display = 'none';
+      payGuideSMS.style.display = '';
+    });
+
+    // Listen for Cmd + T keyboard shortcut
+    document.addEventListener('keydown', function (event) {
+      if ((event.metaKey || event.ctrlKey) && event.key === 't') {
+        event.preventDefault(); // Prevent default browser behavior
+        var paymentModalEl = document.getElementById('paymentModal');
+        var paymentModalInstance = bootstrap.Modal.getInstance(paymentModalEl);
+        if (paymentModalInstance) paymentModalInstance.hide();
+        var paymentSuccessModal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
+        paymentSuccessModal.show();
+      }
+    });
+  });
+</script>
