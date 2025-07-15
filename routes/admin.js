@@ -144,10 +144,18 @@ router.post('/nganh/delete/:id', isAdmin, async (req, res) => {
         }
     } catch (error) {
         console.error('Error deleting nganh:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Có lỗi xảy ra khi xóa ngành'
-        });
+        if (error.code === 'NGANH_HAS_CAU_HOI') {
+            res.status(400).json({
+                success: false,
+                message: error.message,
+                cauHois: error.cauHois // trả về danh sách câu hỏi còn tồn tại
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                message: 'Có lỗi xảy ra khi xóa ngành'
+            });
+        }
     }
 });
 
@@ -160,7 +168,8 @@ router.get('/chuyen-nganh', isAdmin, async (req, res) => {
 
         const chuyenNganhs = await chuyenNganhService.getAllChuyenNganh();
         const total = await chuyenNganhService.countChuyenNganh();
-        
+        console.log("chuyenNganhs");
+        console.log(chuyenNganhs);
         res.render('admin/chuyen-nganh/index', {
             title: 'Quản lý Chuyên ngành',
             path: '/admin/chuyen-nganh',
@@ -201,12 +210,25 @@ router.get('/chuyen-nganh/create', isAdmin, async (req, res) => {
 router.post('/chuyen-nganh/create', isAdmin, async (req, res) => {
     try {
         await chuyenNganhService.createChuyenNganh(req.body);
-        req.flash('success', 'Thêm chuyên ngành thành công');
-        res.redirect('/admin/chuyen-nganh');
+        res.json({
+            success: true,
+            message: 'Thêm chuyên ngành thành công'
+        });
     } catch (error) {
-        console.error('Error creating chuyen nganh:', error);
-        req.flash('error', 'Có lỗi xảy ra khi thêm chuyên ngành');
-        res.redirect('/admin/chuyen-nganh/create');
+        if (error.code === 'CHUYEN_NGANH_EXISTS') {
+            res.status(400).json({
+                success: false,
+                message: 'Mã chuyên ngành đã tồn tại',
+                error: error.message,
+                formData: req.body
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                message: 'Có lỗi xảy ra khi thêm chuyên ngành',
+                error: error.message
+            });
+        }
     }
 });
 
@@ -214,8 +236,12 @@ router.get('/chuyen-nganh/edit/:id', isAdmin, async (req, res) => {
     try {
         const [chuyenNganh, nganhs] = await Promise.all([
             chuyenNganhService.getChuyenNganhById(req.params.id),
-            nganhService.getAllNganh()
+            nganhService.getChuyenNganhCha()
         ]);
+        console.log("chuyên ngành:");
+        console.log(chuyenNganh);
+        console.log("chuyên ngành cha:");
+        console.log(nganhs);
         if (!chuyenNganh) {
             req.flash('error', 'Không tìm thấy chuyên ngành');
             return res.redirect('/admin/chuyen-nganh');
@@ -235,17 +261,53 @@ router.get('/chuyen-nganh/edit/:id', isAdmin, async (req, res) => {
 
 router.post('/chuyen-nganh/edit/:id', isAdmin, async (req, res) => {
     try {
-        const success = await chuyenNganhService.updateChuyenNganh(req.params.id, req.body);
-        if (success) {
-            req.flash('success', 'Cập nhật chuyên ngành thành công');
-        } else {
-            req.flash('error', 'Không tìm thấy chuyên ngành để cập nhật');
+        const { ten_nhom_nganh, parent_id, mo_ta } = req.body;
+        // Validate required fields
+        if (!ten_nhom_nganh || ten_nhom_nganh.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: 'Tên chuyên ngành không được để trống'
+            });
         }
-        res.redirect('/admin/chuyen-nganh');
+        if (!parent_id || parent_id === '' || parent_id === 'null') {
+            return res.status(400).json({
+                success: false,
+                message: 'Ngành cha không được để trống'
+            });
+        }
+        // Chuẩn hóa dữ liệu gửi sang service
+        const updateData = {
+            ten: ten_nhom_nganh,
+            parent_id: parent_id,
+            moTa: mo_ta
+        };
+        // Kiểm tra chuyên ngành tồn tại
+        const chuyenNganh = await chuyenNganhService.getChuyenNganhById(req.params.id);
+        if (!chuyenNganh) {
+            return res.status(404).json({
+                success: false,
+                message: 'Không tìm thấy chuyên ngành để cập nhật'
+            });
+        }
+        // Cập nhật chuyên ngành
+        const success = await chuyenNganhService.updateChuyenNganh(req.params.id, updateData);
+        if (success) {
+            return res.json({
+                success: true,
+                message: 'Cập nhật chuyên ngành thành công'
+            });
+        } else {
+            return res.status(404).json({
+                success: false,
+                message: 'Không tìm thấy chuyên ngành để cập nhật'
+            });
+        }
     } catch (error) {
         console.error('Error updating chuyen nganh:', error);
-        req.flash('error', 'Có lỗi xảy ra khi cập nhật chuyên ngành');
-        res.redirect(`/admin/chuyen-nganh/edit/${req.params.id}`);
+        return res.status(500).json({
+            success: false,
+            message: 'Có lỗi xảy ra khi cập nhật chuyên ngành'
+        });
     }
 });
 
@@ -253,15 +315,23 @@ router.post('/chuyen-nganh/delete/:id', isAdmin, async (req, res) => {
     try {
         const success = await chuyenNganhService.deleteChuyenNganh(req.params.id);
         if (success) {
-            req.flash('success', 'Xóa chuyên ngành thành công');
+            res.json({
+                success: true,
+                message: 'Xóa chuyên ngành thành công'
+            });
         } else {
-            req.flash('error', 'Không tìm thấy chuyên ngành để xóa');
+            res.status(404).json({
+                success: false,
+                message: 'Không tìm thấy chuyên ngành để xóa'
+            });
         }
     } catch (error) {
         console.error('Error deleting chuyen nganh:', error);
-        req.flash('error', 'Có lỗi xảy ra khi xóa chuyên ngành');
+        res.status(500).json({
+            success: false,
+            message: 'Có lỗi xảy ra khi xóa chuyên ngành'
+        });
     }
-    res.redirect('/admin/chuyen-nganh');
 });
 
 // Câu hỏi routes
@@ -291,11 +361,11 @@ router.get('/cau-hoi', isAdmin, async (req, res) => {
     } catch (error) {
         console.error('Error fetching cau hoi:', error);
         req.flash('error', 'Có lỗi xảy ra khi tải danh sách câu hỏi');
-        res.redirect('/admin');
+        // res.redirect('/admin');
     }
 });
 
-router.get('/cau-hoi/create', cauHoiController.showCreateForm);
+router.get('/cau-hoi/them-moi', cauHoiController.showCreateForm);
 router.post('/cau-hoi/create', cauHoiController.create);
 
 router.get('/cau-hoi/sua/:id', isAdmin, async (req, res) => {

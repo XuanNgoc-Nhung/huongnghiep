@@ -4,9 +4,8 @@ class ChuyenNganhService {
     async getAllChuyenNganh() {
         try {
             // First get all chuyen nganh
-            const [chuyenNganhs] = await db.query('SELECT ma_chuyen_nganh, ten_chuyen_nganh, ma_nganh, mo_ta FROM chuyen_nganh');
-            
-            // For each chuyen nganh, get the corresponding nganh names
+            const [chuyenNganhs] = await db.query('SELECT * FROM nhom_nganh where parent_id is not null');
+            // For each chuyen nganh, get the corresponding nganh names and maNganhCha
             const result = await Promise.all(chuyenNganhs.map(async (cn) => {
                 let maNganhs = [];
                 try {
@@ -14,22 +13,34 @@ class ChuyenNganhService {
                     maNganhs = JSON.parse(cn.ma_nganh || '[]');
                 } catch (e) {
                     // If not JSON, treat as single value
-                    maNganhs = cn.ma_nganh ? [cn.ma_nganh] : [];
+                    maNganhs = cn.parent_id ? [cn.parent_id] : [];
                 }
                 
                 let tenNganh = '';
                 if (maNganhs.length > 0) {
                     const [nganhs] = await db.query(
-                        'SELECT ten_nganh FROM nganh WHERE ma_nganh IN (?)',
+                        'SELECT ten_nhom_nganh FROM nhom_nganh WHERE id IN (?)',
                         [maNganhs]
                     );
-                    tenNganh = nganhs.map(n => n.ten_nganh).join(', ');
+                    tenNganh = nganhs.map(n => n.ten_nhom_nganh).join(', ');
+                }
+
+                // Lấy thông tin ngành cha
+                let maNganhCha = null;
+                if (cn.parent_id) {
+                    const [nganhChaRows] = await db.query(
+                        'SELECT * FROM nhom_nganh WHERE id = ?',
+                        [cn.parent_id]
+                    );
+                    if (nganhChaRows && nganhChaRows.length > 0) {
+                        maNganhCha = nganhChaRows[0];
+                    }
                 }
                 
                 return {
                     ...cn,
-                    id: cn.ma_chuyen_nganh,
-                    tenNganh
+                    tenNganh,
+                    maNganhCha
                 };
             }));
             
@@ -42,21 +53,9 @@ class ChuyenNganhService {
 
     async getChuyenNganhById(id) {
         try {
-            const [rows] = await db.query('SELECT * FROM chuyen_nganh WHERE ma_chuyen_nganh = ?', [id]);
+            const [rows] = await db.query('SELECT * FROM nhom_nganh WHERE id = ?', [id]);
             if (rows[0]) {
-                let maNganhs = [];
-                try {
-                    // Try to parse as JSON first
-                    maNganhs = JSON.parse(rows[0].ma_nganh || '[]');
-                } catch (e) {
-                    // If not JSON, treat as single value
-                    maNganhs = rows[0].ma_nganh ? [rows[0].ma_nganh] : [];
-                }
-                
-                return {
-                    ...rows[0],
-                    ma_nganh: maNganhs
-                };
+                return rows[0];
             }
             return null;
         } catch (error) {
@@ -67,33 +66,33 @@ class ChuyenNganhService {
 
     async createChuyenNganh(data) {
         try {
-            const { maChuyenNganh, ten, nganhs, moTa } = data;
-            
-            // Convert nganhs array to JSON string
-            const nganhsJson = JSON.stringify(nganhs || []);
-            
-            const [result] = await db.query(
-                'INSERT INTO chuyen_nganh (ma_chuyen_nganh, ten_chuyen_nganh, ma_nganh, mo_ta) VALUES (?, ?, ?, ?)',
-                [maChuyenNganh, ten, nganhsJson, moTa]
+            const { parent_id, maChuyenNganh, ten, moTa } = data;
+            // Kiểm tra ma_nganh đã tồn tại chưa
+            const [existRows] = await db.query(
+                'SELECT id FROM nhom_nganh WHERE ma_nganh = ?',
+                [maChuyenNganh]
             );
-            
-            return result.insertId;
+            if (existRows && existRows.length > 0) {
+                const error = new Error('Mã chuyên ngành đã tồn tại');
+                error.code = 'CHUYEN_NGANH_EXISTS';
+                throw error;
+            }
+            const [result] = await db.query(
+                'INSERT INTO nhom_nganh (parent_id, ma_nganh, ten_nhom_nganh, mo_ta) VALUES (?, ?, ?, ?)',
+                [parent_id, maChuyenNganh, ten, moTa]
+            );
+            return { insertId: result.insertId };
         } catch (error) {
-            console.error('Error in createChuyenNganh:', error);
             throw error;
         }
     }
 
     async updateChuyenNganh(id, data) {
         try {
-            const { ten, nganhs, moTa } = data;
-            
-            // Convert nganhs array to JSON string
-            const nganhsJson = JSON.stringify(nganhs || []);
-            
+            const { ten, parent_id, moTa } = data;
             const [result] = await db.query(
-                'UPDATE chuyen_nganh SET ten_chuyen_nganh = ?, ma_nganh = ?, mo_ta = ? WHERE ma_chuyen_nganh = ?',
-                [ten, nganhsJson, moTa, id]
+                'UPDATE nhom_nganh SET ten_nhom_nganh = ?, parent_id = ?, mo_ta = ? WHERE id = ?',
+                [ten, parent_id, moTa, id]
             );
             return result.affectedRows > 0;
         } catch (error) {
@@ -104,7 +103,7 @@ class ChuyenNganhService {
 
     async deleteChuyenNganh(id) {
         try {
-            const [result] = await db.query('DELETE FROM chuyen_nganh WHERE ma_chuyen_nganh = ?', [id]);
+            const [result] = await db.query('DELETE FROM nhom_nganh WHERE id = ?', [id]);
             return result.affectedRows > 0;
         } catch (error) {
             console.error('Error in deleteChuyenNganh:', error);
@@ -114,7 +113,7 @@ class ChuyenNganhService {
 
     async countChuyenNganh() {
         try {
-            const [rows] = await db.query('SELECT COUNT(*) as count FROM chuyen_nganh');
+            const [rows] = await db.query('SELECT COUNT(*) as count FROM nganh_hoc');
             return rows[0].count;
         } catch (error) {
             console.error('Error in countChuyenNganh:', error);

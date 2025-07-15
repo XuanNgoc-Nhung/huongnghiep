@@ -42,7 +42,7 @@
                         <table class="table table-hover text-nowrap table-bordered">
                             <thead>
                                 <tr>
-                                    <th>STT</th>
+                                    <th class="text-center">STT</th>
                                     <th>Mã ngành</th>
                                     <th>Tên ngành</th>
                                     <th>Mô tả</th>
@@ -52,8 +52,8 @@
                             <tbody>
                                 {{#each nganhs}}
                                 <tr>
-                                    <td>{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
-                                    <td>{{this.id}}</td>
+                                    <td class="text-center">{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
+                                    <td>{{this.ma_nganh}}</td>
                                     <td>{{this.ten}}</td>
                                     <td>{{this.moTa}}</td>
                                     <td class="text-center">

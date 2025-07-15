@@ -30,18 +30,18 @@
                         <form action="/admin/chuyen-nganh/edit/{{chuyenNganh.id}}" method="POST" id="editForm">
                             <div class="form-group">
                                 <label for="id">Mã chuyên ngành</label>
-                                <input type="text" class="form-control" id="id" name="ma_chuyen_nganh" value="{{chuyenNganh.ma_chuyen_nganh}}" readonly>
+                                <input type="text" class="form-control" id="id" name="ma_nganh" value="{{chuyenNganh.ma_nganh}}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="ten">Tên chuyên ngành <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="ten" name="ten_chuyen_nganh" value="{{chuyenNganh.ten_chuyen_nganh}}" required>
+                                <input type="text" class="form-control" id="ten" name="ten_nhom_nganh" value="{{chuyenNganh.ten_nhom_nganh}}" required>
                             </div>
                             <div class="form-group">
                                 <label for="nganh">Ngành <span class="text-danger">*</span></label>
-                                <select class="form-control select2" id="nganh" name="nganh_id" required>
+                                <select class="form-control select2" id="nganh" name="parent_id" required>
                                     <option value="">Chọn ngành</option>
                                     {{#each nganhs}}
-                                    <option value="{{this.id}}" {{#if (eq this.id ../chuyenNganh.nganh_id)}}selected{{/if}}>{{this.ten_nganh}}</option>
+                                    <option value="{{this.id}}" {{#if (eq this.id ../chuyenNganh.parent_id)}}selected{{/if}}>{{this.ten}}</option>
                                     {{/each}}
                                 </select>
                             </div>
@@ -66,32 +66,30 @@
 <!-- Add Select2 CSS and JS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+<script src="/js/rest_api.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('editForm');
     
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         try {
             const formData = new FormData(form);
             const data = {
-                ten: formData.get('ten'),
-                nganh: formData.get('nganh'),
-                moTa: formData.get('moTa')
+                ten_nhom_nganh: formData.get('ten_nhom_nganh'),
+                parent_id: formData.get('parent_id'),
+                mo_ta: formData.get('mo_ta')
             };
-            
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+
+            const response = await callApi({
+                url: '/admin/chuyen-nganh/edit/{{chuyenNganh.id}}',
+                params: data,
+                method: 'POST'
             });
-            
-            const result = await response.json();
-            
+
+            const result = response.data;
+
             if (result.success) {
                 Swal.fire({
                     icon: 'success',

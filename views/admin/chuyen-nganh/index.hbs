@@ -42,10 +42,10 @@
                         <table class="table table-hover text-nowrap table-bordered">
                             <thead>
                                 <tr>
-                                    <th>STT</th>
+                                    <th class="text-center">STT</th>
+                                    <th>Chuyên ngành cha</th>
                                     <th>Mã chuyên ngành</th>
                                     <th>Tên chuyên ngành</th>
-                                    <th>Ngành</th>
                                     <th>Mô tả</th>
                                     <th class="text-center">Thao tác</th>
                                 </tr>
@@ -53,20 +53,18 @@
                             <tbody>
                                 {{#each chuyenNganhs}}
                                 <tr>
-                                    <td>{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
-                                    <td>{{this.ma_chuyen_nganh}}</td>
-                                    <td>{{this.ten_chuyen_nganh}}</td>
-                                    <td>{{this.tenNganh}}</td>
+                                    <td class="text-center">{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
+                                    <td>{{this.maNganhCha.ten_nhom_nganh}}</td>
+                                    <td>{{this.ma_nganh}}</td>
+                                    <td>{{this.ten_nhom_nganh}}</td>
                                     <td>{{this.mo_ta}}</td>
                                     <td class="text-center">
                                         <a href="/admin/chuyen-nganh/edit/{{this.id}}" class="btn btn-sm btn-info">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="/admin/chuyen-nganh/delete/{{this.id}}" method="POST" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa chuyên ngành này?')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteChuyenNganh('{{this.id}}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 {{/each}}
@@ -80,7 +78,7 @@
         </div>
     </div>
 </section>
-
+<script src="/js/rest_api.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Handle search form submission
@@ -141,6 +139,8 @@ document.querySelectorAll('form').forEach(form => {
 
 // Handle delete
 function deleteChuyenNganh(id) {
+    console.log("id");
+    console.log(id);
     Swal.fire({
         title: 'Bạn có chắc chắn?',
         text: "Bạn không thể hoàn tác sau khi xóa!",
@@ -153,12 +153,14 @@ function deleteChuyenNganh(id) {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                const response = await fetch(`/admin/chuyen-nganh/delete/${id}`, {
+                // Gọi callApi thay vì fetch
+                const data = await callApi({
+                    url: `/admin/chuyen-nganh/delete/${id}`,
                     method: 'POST'
                 });
-                const data = await response.json();
-                
-                if (data.success) {
+                console.log("data");
+                console.log(data);
+                if (data.data.success) {
                     showToast('success', 'Thành công!', data.message);
                     setTimeout(() => {
                         window.location.reload();

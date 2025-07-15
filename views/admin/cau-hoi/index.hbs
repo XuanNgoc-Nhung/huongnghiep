@@ -57,12 +57,11 @@
                         <table class="table table-hover text-nowrap table-bordered">
                             <thead>
                                 <tr>
-                                    <th>STT</th>
-                                    <th>Mã câu hỏi</th>
+                                    <th class="text-center">STT</th>
+                                    <th class="text-center">Mã câu hỏi</th>
                                     <th>Nội dung câu hỏi</th>
-                                    <th>Cấp độ</th>
+                                    <th>Loại câu hỏi</th>
                                     <th>Chuyên ngành</th>
-                                    <th>Tags</th>
                                     <th>Trạng thái</th>
                                     <th class="text-center">Thao tác</th>
                                 </tr>
@@ -70,31 +69,20 @@
                             <tbody>
                                 {{#each cauHois}}
                                 <tr>
-                                    <td>{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
-                                    <td>{{this.ma_cau_hoi}}</td>
-                                    <td>{{this.noi_dung}}</td>
-                                    <td>{{this.cap_do}}</td>
+                                    <td class="text-center">{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
+                                    <td class="text-center">{{this.id}}</td>
+                                    <td>{{this.cau_hoi}}</td>
+                                    <td>{{this.loai_cau_hoi}}</td>
                                     <td>
-                                        {{#if this.ten_chuyen_nganh}}
-                                            {{#each this.ten_chuyen_nganh}}
-                                                <span class="badge badge-info">{{this}}</span>
-                                            {{/each}}
+                                        {{#if this.ten_nhom_nganh}}
+                                            <span class="badge badge-info">{{this.ten_nhom_nganh}}</span>
                                         {{else}}
                                             <span class="text-muted">Không có chuyên ngành</span>
                                         {{/if}}
                                     </td>
                                     <td>
-                                        {{#if this.tags}}
-                                            {{#each this.tags}}
-                                                <span class="badge badge-secondary">{{this}}</span>
-                                            {{/each}}
-                                        {{else}}
-                                            <span class="text-muted">Không có tags</span>
-                                        {{/if}}
-                                    </td>
-                                    <td>
-                                        <span class="badge {{#if this.trang_thai}}badge-success{{else}}badge-danger{{/if}}">
-                                            {{#if this.trang_thai}}Hoạt động{{else}}Không hoạt động{{/if}}
+                                        <span class="badge {{#if this.status}}badge-success{{else}}badge-danger{{/if}}">
+                                            {{#if this.status}}Hoạt động{{else}}Không hoạt động{{/if}}
                                         </span>
                                     </td>
                                     <td class="text-center">

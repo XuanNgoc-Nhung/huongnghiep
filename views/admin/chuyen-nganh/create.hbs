@@ -34,26 +34,29 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <form action="/admin/chuyen-nganh/create" method="POST">
+                        {{#if error}}
+                        <div class="alert alert-danger" id="error-message">{{error}}</div>
+                        {{/if}}
+                        <form id="chuyenNganhForm">
                             <div class="form-group">
                                 <label for="maChuyenNganh">Mã chuyên ngành</label>
-                                <input type="text" class="form-control" id="maChuyenNganh" name="maChuyenNganh" required>
+                                <input type="text" class="form-control" id="maChuyenNganh" name="maChuyenNganh" required value="{{#if formData}}{{formData.maChuyenNganh}}{{/if}}">
                             </div>
                             <div class="form-group">
                                 <label for="ten">Tên chuyên ngành</label>
-                                <input type="text" class="form-control" id="ten" name="ten" required>
+                                <input type="text" class="form-control" id="ten" name="ten" required value="{{#if formData}}{{formData.ten}}{{/if}}">
                             </div>
                             <div class="form-group">
-                                <label for="nganhs">Ngành</label>
-                                <select class="form-control select2" id="nganhs" name="nganhs[]" multiple required>
+                                <label for="nganhs">Trực thuộc ngành</label>
+                                <select class="form-control select2" id="nganhs" name="parent_id" required>
                                     {{#each nganhs}}
-                                    <option value="{{this.id}}">{{this.ten}}</option>
+                                    <option value="{{this.id}}" {{#if formData}}{{#ifEquals this.id ../formData.parent_id}}selected{{/ifEquals}}{{/if}}>{{this.ten}}</option>
                                     {{/each}}
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="moTa">Mô tả</label>
-                                <textarea class="form-control" id="moTa" name="moTa" rows="3"></textarea>
+                                <textarea class="form-control" id="moTa" name="moTa" rows="3">{{#if formData}}{{formData.moTa}}{{/if}}</textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Lưu</button>
                         </form>
@@ -69,7 +72,45 @@
     <!-- /.container-fluid -->
 </section>
 <!-- /.content -->
-
-
+<script src="/js/rest_api.js"></script>
 <script>
+$(document).ready(function() {
+    $('.select2').select2();
+
+    // Custom helper for Handlebars ifEquals
+    // (add this helper in your server-side setup if not available)
+
+    $('#chuyenNganhForm').on('submit', function(e) {
+        e.preventDefault();
+        // Lấy dữ liệu từ các trường input
+        const data = {
+            maChuyenNganh: $('#maChuyenNganh').val(),
+            ten: $('#ten').val(),
+            parent_id: $('#nganhs').val(),
+            moTa: $('#moTa').val()
+        };
+        callApi({
+            url: '/admin/chuyen-nganh/create',
+            params: data,
+            method: 'POST'
+        })
+        .then(function(response) {
+            if (response.data.success) {
+                window.location.href = '/admin/chuyen-nganh';
+            } else {
+                $('#error-message').remove();
+                $('#chuyenNganhForm').before('<div class="alert alert-danger" id="error-message">' + response.data.message + '</div>');
+            }
+            // Có thể redirect hoặc hiển thị thông báo thành công ở đây
+        })
+        .catch(function(error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                $('#error-message').remove();
+                $('#chuyenNganhForm').before('<div class="alert alert-danger" id="error-message">' + error.response.data.message + '</div>');
+            } else {
+                alert('Có lỗi xảy ra khi thêm chuyên ngành');
+            }
+        });
+    });
+});
 </script>

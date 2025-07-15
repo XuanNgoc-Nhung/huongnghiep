@@ -6,19 +6,17 @@ const cauHoiController = {
         try {
             // Lấy danh sách câu hỏi từ database
             const [cauHois] = await pool.query(`
-                SELECT ch.*, GROUP_CONCAT(cn.ten_chuyen_nganh) as ten_chuyen_nganh
+                SELECT ch.*, nn.ten_nhom_nganh
                 FROM cau_hoi ch
-                LEFT JOIN chuyen_nganh cn ON FIND_IN_SET(cn.ma_chuyen_nganh, REPLACE(REPLACE(ch.ma_chuyen_nganh, '[', ''), ']', ''))
-                GROUP BY ch.ma_cau_hoi
+                LEFT JOIN nhom_nganh nn ON ch.nhom_nganh_id = nn.id
                 ORDER BY ch.ngay_cap_nhat DESC
             `);
 
             // Format lại dữ liệu để hiển thị
             const formattedCauHois = cauHois.map(cauHoi => ({
                 ...cauHoi,
-                ma_chuyen_nganh: JSON.parse(cauHoi.ma_chuyen_nganh),
-                tags: cauHoi.tags ? JSON.parse(cauHoi.tags) : [],
-                ten_chuyen_nganh: cauHoi.ten_chuyen_nganh ? cauHoi.ten_chuyen_nganh.split(',') : [],
+                nhom_nganh_id: cauHoi.nhom_nganh_id,
+                ten_nhom_nganh: cauHoi.ten_nhom_nganh,
                 trang_thai: cauHoi.trang_thai === 1 ? 'Hoạt động' : 'Không hoạt động'
             }));
 
@@ -41,7 +39,7 @@ const cauHoiController = {
             // Lấy danh sách chuyên ngành
             const [chuyenNganhs] = await pool.query('SELECT * FROM chuyen_nganh');
             
-            res.render('admin/cau-hoi/create', {
+            res.render('admin/cau-hoi/them-moi', {
                 chuyenNganhs
             });
         } catch (error) {
@@ -55,16 +53,13 @@ const cauHoiController = {
     // Xử lý tạo câu hỏi mới
     create: async (req, res) => {
         try {
-            const { noi_dung, cap_do, ma_chuyen_nganh, tags, trang_thai } = req.body;
+            const { cau_hoi, loai_cau_hoi, nhom_nganh_id, tags, trang_thai } = req.body;
             
             // Kiểm tra dữ liệu đầu vào
             const missingFields = [];
-            if (!noi_dung) missingFields.push('Nội dung câu hỏi');
-            if (!cap_do) missingFields.push('Cấp độ');
-            if (!ma_chuyen_nganh || !Array.isArray(ma_chuyen_nganh) || ma_chuyen_nganh.length === 0) {
-                missingFields.push('Chuyên ngành');
-            }
-
+            if (!cau_hoi) missingFields.push('Nội dung câu hỏi');
+            if (!loai_cau_hoi) missingFields.push('Loại câu hỏi');
+            if (!nhom_nganh_id) missingFields.push('Chuyên ngành');
             if (missingFields.length > 0) {
                 return res.status(400).json({
                     success: false,
@@ -74,20 +69,20 @@ const cauHoiController = {
 
             const currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
+            //Lấy thông tin người dùng đang đăng nhập từ session
+            const user = req.session.user;
+            console.log('User:', user);
             // Thêm câu hỏi vào database
             const [result] = await pool.query(
-                'INSERT INTO cau_hoi (ma_cau_hoi, noi_dung, cap_do, ma_chuyen_nganh, tags, trang_thai, ngay_cap_nhat) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                'INSERT INTO cau_hoi (cau_hoi, loai_cau_hoi, nhom_nganh_id, status, created_at) VALUES (?, ?, ?, ?, ?)',
                 [
-                    `CH${Date.now()}`,
-                    noi_dung,
-                    cap_do,
-                    JSON.stringify(ma_chuyen_nganh),
-                    tags ? JSON.stringify(tags) : null,
+                    cau_hoi,
+                    loai_cau_hoi,
+                    nhom_nganh_id,
                     trang_thai ? 1 : 0,
                     currentTime
                 ]
             );
-
             res.json({
                 success: true,
                 message: 'Thêm câu hỏi thành công'

@@ -1,4 +1,5 @@
 const db = require('../config/database');
+const { LOAI_CAU_HOI } = require('../constants');
 
 class CauHoiService {
     async getAllCauHoi() {
@@ -72,17 +73,21 @@ class CauHoiService {
     async getCauHoiWithFilter(page, limit, search) {
         try {
             const offset = (page - 1) * limit;
-            let query = 'SELECT * FROM cau_hoi';
+            let query = `
+                SELECT c.*, nn.ten_nhom_nganh 
+                FROM cau_hoi c 
+                LEFT JOIN nhom_nganh nn ON c.nhom_nganh_id = nn.id
+            `;
             let countQuery = 'SELECT COUNT(*) as total FROM cau_hoi';
             const params = [];
 
             if (search) {
-                query += ' WHERE noi_dung LIKE ?';
+                query += ' WHERE c.noi_dung LIKE ?';
                 countQuery += ' WHERE noi_dung LIKE ?';
                 params.push(`%${search}%`);
             }
 
-            query += ' ORDER BY ngay_cap_nhat DESC LIMIT ? OFFSET ?';
+            query += ' ORDER BY c.created_at DESC LIMIT ? OFFSET ?';
             params.push(limit, offset);
 
             const [rows, countRows] = await Promise.all([
@@ -95,25 +100,14 @@ class CauHoiService {
             // Format lại dữ liệu và lấy tên chuyên ngành
             const formattedQuestions = await Promise.all(rows[0].map(async (cauHoi) => {
                 const maChuyenNganhs = JSON.parse(cauHoi.ma_chuyen_nganh || '[]');
-                let tenChuyenNganhs = [];
-
-                if (maChuyenNganhs.length > 0) {
-                    const [chuyenNganhs] = await db.query(
-                        'SELECT ten_chuyen_nganh FROM chuyen_nganh WHERE ma_chuyen_nganh IN (?)',
-                        [maChuyenNganhs]
-                    );
-                    tenChuyenNganhs = chuyenNganhs.map(cn => cn.ten_chuyen_nganh);
-                }
-
+                const loaiCauHoi = LOAI_CAU_HOI.find(loai => loai.id === cauHoi.loai_cau_hoi);
                 // console.log('Question ID:', cauHoi.ma_cau_hoi);
                 // console.log('Ma chuyen nganh:', maChuyenNganhs);
                 // console.log('Ten chuyen nganh:', tenChuyenNganhs);
 
                 return {
                     ...cauHoi,
-                    ma_chuyen_nganh: maChuyenNganhs,
-                    ten_chuyen_nganh: tenChuyenNganhs,
-                    tags: cauHoi.tags ? JSON.parse(cauHoi.tags) : [],
+                    loai_cau_hoi: loaiCauHoi.name,
                     trang_thai: cauHoi.trang_thai === 1
                 };
             }));

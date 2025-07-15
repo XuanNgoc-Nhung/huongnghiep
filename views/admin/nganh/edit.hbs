@@ -30,11 +30,11 @@
                         <form action="/admin/nganh/edit/{{nganh.id}}" method="POST" id="editForm">
                             <div class="form-group">
                                 <label for="id">Mã ngành</label>
-                                <input type="text" class="form-control" id="id" name="ma_nganh" value="{{nganh.id}}" readonly>
+                                <input type="text" class="form-control" id="id" name="ma_nganh" value="{{nganh.ma_nganh}}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="ten">Tên ngành <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="ten" name="ten" value="{{nganh.ten}}" required>
+                                <input type="text" class="form-control" id="ten" name="ten" value="{{nganh.ten_nhom_nganh}}" required>
                             </div>
                             <div class="form-group">
                                 <label for="moTa">Mô tả</label>
