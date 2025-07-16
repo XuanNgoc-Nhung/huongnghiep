@@ -22,59 +22,55 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Danh sách câu trả lời</h3>
-                        <div class="card-tools">
-                            <form action="/admin/cau-tra-loi" method="GET" class="form-inline">
-                                <div class="input-group mr-2">
-                                    <input type="text" name="search" class="form-control" placeholder="Nhập nội dung câu trả lời..." value="{{search}}">
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-default">
-                                            <i class="fas fa-search"></i> Tìm kiếm
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-hover text-nowrap table-bordered">
-                            <thead>
+                <div class="card"> <!-- Thêm dòng này để bọc bảng bằng class card -->
+                {{!-- Lặp qua từng câu hỏi --}}
+                <table class="table text-nowrap table-bordered mb-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">STT</th>
+                            <th>Câu hỏi</th>
+                            <th>Nội dung trả lời</th>
+                            <th>Điểm</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each cauHoiWithAnswers}}
+                            {{#if this.cauTraLois.length}}
+                                {{#each this.cauTraLois}}
+                                    <tr>
+                                        {{#if @first}}
+                                            <td class="text-center align-middle" rowspan="{{../cauTraLois.length}}">{{add @../index 1}}</td>
+                                            <td class="align-middle" rowspan="{{../cauTraLois.length}}">{{../cau_hoi}}</td>
+                                        {{/if}}
+                                        {{#unless @first}}
+                                            <!-- Empty cells for rows after the first -->
+                                        {{/unless}}
+                                        <td>{{this.cau_tra_loi}}</td>
+                                        <td>{{this.diem}}</td>
+                                        <td class="text-center">
+                                            <a href="/admin/cau-tra-loi/edit/{{this.id}}" class="btn btn-sm btn-info">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="deleteCauTraLoi('{{this.id}}')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            {{else}}
                                 <tr>
-                                    <th class="text-center">STT</th>
-                                    <th class="text-center">#id</th>
-                                    <th>Câu hỏi</th>
-                                    <th>Nội dung</th>
-                                    <th>Điểm</th>
-                                    <th class="text-center">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#each cauTraLois}}
-                                <tr>
-                                    <td class="text-center">{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
-                                    <td class="text-center">{{this.id}}</td>
-                                    <td>{{this.cauHoi}}</td>
-                                    <td>{{this.cau_tra_loi}}</td>
-                                    <td>{{this.diem}}</td>
-                                    <td class="text-center">
-                                        <a href="/admin/cau-tra-loi/edit/{{this.id}}" class="btn btn-sm btn-info">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteCauTraLoi('{{this.id}}')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    <td class="text-center align-middle">{{add @index 1}}</td>
+                                    <td colspan="5" class="text-center text-muted align-middle">
+                                        Câu hỏi: {{this.noi_dung}} - Chưa có câu trả lời nào
                                     </td>
                                 </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                    {{> pagination baseUrl="/admin/cau-tra-loi"}}
-                </div>
+                            {{/if}}
+                        {{/each}}
+                    </tbody>
+                </table>
+                {{> pagination baseUrl="/admin/cau-tra-loi" pagination=pagination search=search limit=limit}}
+                </div> <!-- Đóng thẻ card -->
             </div>
         </div>
     </div>

@@ -453,19 +453,23 @@ router.get('/cau-tra-loi', isAdmin, async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
-        const cauTraLois = await cauTraLoiService.getAllCauTraLoi();
-        const total = cauTraLois.length; // hoặc await cauTraLoiService.countCauTraLoi();
+        const search = req.query.search || '';
 
+        const result = await cauTraLoiService.getCauTraLoiGroupByCauHoiWithPagination(page, limit, search);
         res.render('admin/cau-tra-loi/index', {
             title: 'Quản lý Câu trả lời',
             path: '/admin/cau-tra-loi',
-            cauTraLois: cauTraLois.slice((page-1)*limit, page*limit),
+            cauHoiWithAnswers: result.cauHoiWithAnswers,
             pagination: {
-                currentPage: page,
-                totalPages: Math.ceil(total / limit),
-                total: total,
-                limit: limit
-            }
+                currentPage: result.currentPage,
+                totalPages: result.totalPages,
+                total: result.total,
+                limit: limit,
+                startItem: (result.currentPage - 1) * limit + 1,
+                endItem: Math.min(result.currentPage * limit, result.total)
+            },
+            search: search,
+            limit: limit
         });
     } catch (error) {
         console.error('Error fetching cau tra loi:', error);
@@ -503,6 +507,19 @@ router.get('/cau-tra-loi/edit/:id', isAdmin, async (req, res) => {
 router.post('/cau-tra-loi/edit/:id', isAdmin, async (req, res) => {
     try {
         const success = await cauTraLoiService.updateCauTraLoi(req.params.id, req.body);
+        if (req.xhr || req.headers.accept && req.headers.accept.indexOf('application/json') !== -1) {
+            if (success) {
+                return res.json({
+                    success: true,
+                    message: 'Cập nhật câu trả lời thành công'
+                });
+            } else {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Không tìm thấy câu trả lời để cập nhật'
+                });
+            }
+        }
         if (success) {
             req.flash('success', 'Cập nhật câu trả lời thành công');
         } else {
@@ -511,6 +528,12 @@ router.post('/cau-tra-loi/edit/:id', isAdmin, async (req, res) => {
         res.redirect('/admin/cau-tra-loi');
     } catch (error) {
         console.error('Error updating cau tra loi:', error);
+        if (req.xhr || req.headers.accept && req.headers.accept.indexOf('application/json') !== -1) {
+            return res.status(500).json({
+                success: false,
+                message: 'Có lỗi xảy ra khi cập nhật câu trả lời'
+            });
+        }
         req.flash('error', 'Có lỗi xảy ra khi cập nhật câu trả lời');
         res.redirect(`/admin/cau-tra-loi/edit/${req.params.id}`);
     }

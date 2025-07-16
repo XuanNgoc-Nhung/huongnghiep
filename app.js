@@ -76,7 +76,7 @@ const hbs = exphbs.create({
                 if (currentPath === expectedPath) {
                     result.push('active');
                 }
-                if (currentPath.startsWith(expectedPath)) {
+                if (typeof currentPath === 'string' && currentPath.startsWith(expectedPath)) {
                     result.push('menu-is-opening menu-open');
                 }
             }

@@ -1,4 +1,5 @@
 {{!-- views/admin/cau-tra-loi/edit.hbs --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -6,21 +7,21 @@
                 <h3 class="card-title">Chỉnh sửa Câu trả lời</h3>
             </div>
             <div class="card-body">
-                <form action="/admin/cau-tra-loi/edit/{{cauTraLoi.id}}" method="POST">
+                <form id="editCauTraLoiForm" action="/admin/cau-tra-loi/edit/{{cauTraLoi.id}}" method="POST">
                     <div class="form-group">
                         <label for="cauHoiId">Câu hỏi</label>
-                        <select class="form-control select2" id="cauHoiId" name="cauHoiId" required>
+                        <select class="form-control select2" id="cauHoiId" name="cauHoiId" disabled required>
                             <option value="">Chọn câu hỏi</option>
                             {{#each cauHois}}
-                            <option value="{{this.id}}" {{#if (eq this.id ../cauTraLoi.cauHoiId)}}selected{{/if}}>
-                                {{this.noiDung}}
+                            <option value="{{this.id}}" {{#if (eq this.id ../cauTraLoi.id_cau_hoi)}}selected{{/if}}>
+                                {{this.cau_hoi}}
                             </option>
                             {{/each}}
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="noiDung">Nội dung câu trả lời</label>
-                        <textarea class="form-control" id="noiDung" name="noiDung" rows="3" required>{{cauTraLoi.noiDung}}</textarea>
+                        <textarea class="form-control" id="noiDung" name="noiDung" rows="3" required>{{cauTraLoi.cau_tra_loi}}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="diem">Điểm</label>
@@ -35,11 +36,54 @@
         </div>
     </div>
 </div>
-
+<script src="/js/rest_api.js"></script>
 <script>
     $(document).ready(function() {
         $('.select2').select2({
             theme: 'bootstrap4'
+        });
+
+        $('#editCauTraLoiForm').on('submit', function(e) {
+            e.preventDefault();
+            const id = '{{cauTraLoi.id}}';
+            const noiDung = $('#noiDung').val();
+            const diem = $('#diem').val();
+            // Nếu cần lấy id_cau_hoi thì lấy từ value select (dù đang disabled)
+            const cauHoiId = $('#cauHoiId').val() || '{{cauTraLoi.id_cau_hoi}}';
+
+            callApi({
+                url: `/admin/cau-tra-loi/edit/${id}`,
+                method: 'POST',
+                params: {
+                    noiDung: noiDung,
+                    diem: diem,
+                    cauHoiId: cauHoiId
+                }
+            })
+            .then(res => {
+                if (res.data && res.data.success !== false) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: 'Cập nhật câu trả lời thành công!'
+                    }).then(() => {
+                        window.location.href = '/admin/cau-tra-loi';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: res.data.message || 'Có lỗi xảy ra khi cập nhật!'
+                    });
+                }
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: 'Có lỗi xảy ra khi cập nhật!'
+                });
+            });
         });
     });
 </script> 
