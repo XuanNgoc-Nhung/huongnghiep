@@ -27,43 +27,30 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <form id="createQuestionForm" action="/admin/cau-hoi/create" method="POST">
+                        <form action="/admin/cau-hoi/create" method="POST" id="createForm">
                             <div class="form-group">
-                                <label for="cau_hoi">Nội dung câu hỏi <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="cau_hoi" name="cau_hoi" rows="3" required></textarea>
+                                <label for="content">Nội dung câu hỏi <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="content" name="cau_hoi" rows="3" required></textarea>
                             </div>
 
                             <div class="form-group">
-                                <label for="loai_cau_hoi">Loại câu hỏi <span class="text-danger">*</span></label>
-                                <select class="form-control" id="loai_cau_hoi" name="loai_cau_hoi" required>
+                                <label for="type">Loại câu hỏi <span class="text-danger">*</span></label>
+                                <select class="form-control select2" id="type" name="loai_cau_hoi" required>
                                     <option value="">Chọn loại câu hỏi</option>
-                                    <option value="1">Sở thích đam mê</option>
-                                    <option value="2">Kỹ năng & khả năng</option>
-                                    <option value="3">Môi trường làm việc</option>
-                                    <option value="4">Phong cách làm việc</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="nhom_nganh_id">Chuyên ngành <span class="text-danger">*</span></label>
-                                <select class="form-control select2" id="nhom_nganh_id" name="nhom_nganh_id" required>
-                                    {{#each chuyenNganhs}}
-                                    <option value="{{this.id}}">{{this.ten_chuyen_nganh}}</option>
+                                    {{#each loaiCauHois}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
                                     {{/each}}
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label for="tags">Tags</label>
-                                <input type="text" class="form-control" id="tags" name="tags" placeholder="Nhập tags, phân cách bằng dấu phẩy">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="trang_thai">Trạng thái</label>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="trang_thai" name="trang_thai" checked>
-                                    <label class="custom-control-label" for="trang_thai">Hoạt động</label>
-                                </div>
+                                <label for="difficulty">Nhóm ngành <span class="text-danger">*</span></label>
+                                <select class="form-control select2" id="difficulty" name="nhom_nganh_id" required>
+                                    <option value="">Chọn nhóm ngành</option>
+                                    {{#each nganhs}}
+                                    <option value="{{this.id}}">{{this.ten_nhom_nganh}}</option>
+                                    {{/each}}
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -80,54 +67,34 @@
     </div>
 </section>
 
+<!-- Add Select2 CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="/js/rest_api.js"></script>
 <script>
-$(document).ready(function() {
-    // Initialize Select2 for chuyen nganh
-    $('#nhom_nganh_id').select2({
-        width: '100%'
-    });
 
-    const createQuestionForm = document.getElementById('createQuestionForm');
-
-    // Form submission
-    createQuestionForm.addEventListener('submit', async function(e) {
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('createForm');
+    
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        const formData = new FormData(this);
-        const data = {};
-        
-        console.log('Raw FormData:');
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
-        
-        // Handle regular form fields
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
-
-        console.log('Data after regular fields:', data);
-
-        // Handle tags - split by comma and trim whitespace
-        const tagsInput = document.getElementById('tags');
-        data.tags = tagsInput.value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-
-        // Handle checkbox field
-        data.trang_thai = document.getElementById('trang_thai').checked ? 1 : 0;
-
-        console.log('Final data to be sent:', data);
 
         try {
-            const response = await fetch(this.action, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+            const formData = new FormData(form);
+            const data = {
+                cau_hoi: formData.get('cau_hoi'),
+                loai_cau_hoi: formData.get('loai_cau_hoi'),
+                nhom_nganh_id: formData.get('nhom_nganh_id'),
+                status: 1
+            };
+
+            const response = await callApi({
+                url: '/admin/cau-hoi/create',
+                params: data,
+                method: 'POST'
             });
 
-            const result = await response.json();
-            console.log('Server response:', result);
+            const result = response.data;
 
             if (result.success) {
                 Swal.fire({
@@ -153,6 +120,18 @@ $(document).ready(function() {
                 title: 'Lỗi!',
                 text: 'Có lỗi xảy ra khi thêm câu hỏi'
             });
+        }
+    });
+});
+
+$(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Tìm kiếm...",
+        allowClear: true,
+        language: {
+            noResults: function() {
+                return "Không tìm thấy kết quả";
+            }
         }
     });
 });

@@ -3,7 +3,11 @@ const db = require('../config/database');
 class CauTraLoiService {
     async getAllCauTraLoi() {
         try {
-            const [rows] = await db.query('SELECT * FROM cau_tra_loi');
+            const [rows] = await db.query(`
+                SELECT ctl.*, ch.cau_hoi AS cauHoi
+                FROM cau_tra_loi ctl
+                JOIN cau_hoi ch ON ctl.id_cau_hoi = ch.id
+            `);
             return rows;
         } catch (error) {
             console.error('Error in getAllCauTraLoi:', error);

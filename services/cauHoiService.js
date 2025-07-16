@@ -38,10 +38,10 @@ class CauHoiService {
 
     async updateCauHoi(id, data) {
         try {
-            const { noiDung, loaiCauHoi, doKho } = data;
+            const { cau_hoi, loai_cau_hoi, nhom_nganh_id } = data;
             const [result] = await db.query(
-                'UPDATE cau_hoi SET noiDung = ?, loaiCauHoi = ?, doKho = ? WHERE id = ?',
-                [noiDung, loaiCauHoi, doKho, id]
+                'UPDATE cau_hoi SET cau_hoi = ?, loai_cau_hoi = ?, nhom_nganh_id = ? WHERE id = ?',
+                [cau_hoi, loai_cau_hoi, nhom_nganh_id, id]
             );
             return result.affectedRows > 0;
         } catch (error) {
@@ -52,9 +52,16 @@ class CauHoiService {
 
     async deleteCauHoi(id) {
         try {
-            const [result] = await db.query('DELETE FROM cau_hoi WHERE ma_cau_hoi = ?', [id]);
+            // Xóa tất cả câu trả lời liên quan trước
+            const [deleteCauTraLoiResult] = await db.query(
+                'DELETE FROM cau_tra_loi WHERE id_cau_hoi = ?',
+                [id]
+            );
+            
+            // Sau đó xóa câu hỏi
+            const [result] = await db.query('DELETE FROM cau_hoi WHERE id = ?', [id]);
             return result.affectedRows > 0;
-        } catch (error) {
+        } catch (error) {   
             console.error('Error in deleteCauHoi:', error);
             throw error;
         }

@@ -43,8 +43,8 @@
                         <table class="table table-hover text-nowrap table-bordered">
                             <thead>
                                 <tr>
-                                    <th>STT</th>
-                                    <th>Mã câu trả lời</th>
+                                    <th class="text-center">STT</th>
+                                    <th class="text-center">#id</th>
                                     <th>Câu hỏi</th>
                                     <th>Nội dung</th>
                                     <th>Điểm</th>
@@ -54,10 +54,10 @@
                             <tbody>
                                 {{#each cauTraLois}}
                                 <tr>
-                                    <td>{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
-                                    <td>{{this.id}}</td>
-                                    <td>{{this.cauHoi.noiDung}}</td>
-                                    <td>{{this.noiDung}}</td>
+                                    <td class="text-center">{{add (multiply (subtract ../pagination.currentPage 1) ../pagination.limit) (add @index 1)}}</td>
+                                    <td class="text-center">{{this.id}}</td>
+                                    <td>{{this.cauHoi}}</td>
+                                    <td>{{this.cau_tra_loi}}</td>
                                     <td>{{this.diem}}</td>
                                     <td class="text-center">
                                         <a href="/admin/cau-tra-loi/edit/{{this.id}}" class="btn btn-sm btn-info">

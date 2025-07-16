@@ -12,7 +12,7 @@
                         <select class="form-control select2" id="cauHoiId" name="cauHoiId" required>
                             <option value="">Chọn câu hỏi</option>
                             {{#each cauHois}}
-                            <option value="{{this.id}}">[{{this.id}}]: {{this.noi_dung}}</option>
+                            <option value="{{this.id}}">[{{this.id}}]: {{this.cau_hoi}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -41,10 +41,6 @@
                                         <label>Điểm</label>
                                         <input type="number" class="form-control" name="answers[0][diem]" min="0" max="10" step="0.1" required placeholder="Nhập điểm từ 0-10">
                                     </div>
-                                    <div class="form-group">
-                                        <label>Ghi chú</label>
-                                        <textarea class="form-control" name="answers[0][ghiChu]" rows="1" placeholder="Nhập ghi chú (nếu có)..."></textarea>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -60,12 +56,15 @@
                         <button type="submit" class="btn btn-primary">Lưu</button>
                         <a href="/admin/cau-tra-loi" class="btn btn-secondary">Hủy</a>
                     </div>
+                    
+                    <!-- Notification area -->
                 </form>
             </div>
         </div>
     </div>
 </div>
-
+<script src="/js/rest_api.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
         // Debug data
@@ -81,10 +80,12 @@
         let answerCount = 1;
 
         function validateAnswer(answerItem) {
-            const noiDung = answerItem.find('textarea[name$="[noiDung]"]').val();
-            const diem = answerItem.find('input[name$="[diem]"]').val();
+            // Lấy textarea và input đầu tiên trong answer-item
+            const noiDung = answerItem.find('textarea').val();
+            const diem = answerItem.find('input[type="number"]').val();
             const statusIcon = answerItem.find('.status-icon');
             
+            console.log('[validateAnswer] answerItem:', answerItem.index(), 'noiDung:', noiDung, 'diem:', diem);
             if (noiDung && diem) {
                 statusIcon.removeClass('text-danger').addClass('text-success');
                 statusIcon.attr('title', 'Đã điền đủ thông tin');
@@ -106,16 +107,35 @@
             validateAnswer($(this));
         });
 
+        // Function to show notifications (using SweetAlert2)
+        function showNotification(message, type = 'success') {
+            let icon = 'success';
+            if (type === 'danger' || type === 'error') icon = 'error';
+            else if (type === 'warning') icon = 'warning';
+            else if (type === 'info') icon = 'info';
+            Swal.fire({
+                icon: icon,
+                html: message,
+                timer: 3000,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                position: 'top-end',
+                toast: true
+            });
+        }
+
         function updateAnswerNumbers() {
+            console.log('[updateAnswerNumbers] Bắt đầu cập nhật lại số thứ tự và tên input');
             $('.answer-item').each(function(index) {
                 const newIndex = index;
                 const button = $(this).find('.btn-link');
                 const collapseId = `collapse${newIndex}`;
                 const headingId = `heading${newIndex}`;
                 
-                // Update button text and attributes
-                button.text(`Câu trả lời #${newIndex + 1} `);
-                button.append('<i class="fas fa-check-circle text-danger status-icon" data-toggle="tooltip" title="Chưa điền đủ thông tin"></i>');
+                // Xoá icon trạng thái cũ trước khi thêm mới
+                button.find('.status-icon').remove();
+                // Chỉ update lại text số thứ tự, thêm icon trống (không set class màu)
+                button.html(`Câu trả lời #${newIndex + 1} <i class="fas fa-check-circle status-icon" data-toggle="tooltip"></i>`);
                 button.attr('data-target', `#${collapseId}`);
                 button.attr('aria-controls', collapseId);
                 
@@ -130,12 +150,19 @@
                 // Update input names
                 $(this).find('textarea[name^="answers["]').attr('name', `answers[${newIndex}][noiDung]`);
                 $(this).find('input[name^="answers["]').attr('name', `answers[${newIndex}][diem]`);
-                $(this).find('textarea[name^="answers["]').last().attr('name', `answers[${newIndex}][ghiChu]`);
+                $(this).find('textarea[name^="answers["]').last().attr('name', `answers[${newIndex}][noiDung]`);
+                console.log(`[updateAnswerNumbers] answer-item index ${index}:`, $(this).find('textarea, input').map(function(){return $(this).attr('name');}).get());
+            });
+
+            // Validate lại tất cả answer-item sau khi cập nhật số thứ tự
+            $('.answer-item').each(function() {
+                validateAnswer($(this));
             });
         }
 
         $('#addAnswer').click(function() {
             const currentCount = $('.answer-item').length;
+            console.log('[addAnswer] Thêm câu trả lời mới, currentCount:', currentCount);
             const newAnswer = `
                 <div class="answer-item card">
                     <div class="card-header p-2" id="heading${currentCount}">
@@ -160,21 +187,25 @@
                                 <label>Điểm</label>
                                 <input type="number" class="form-control" name="answers[${currentCount}][diem]" min="0" max="10" step="0.1" required placeholder="Nhập điểm từ 0-10">
                             </div>
-                            <div class="form-group">
-                                <label>Ghi chú</label>
-                                <textarea class="form-control" name="answers[${currentCount}][ghiChu]" rows="1" placeholder="Nhập ghi chú (nếu có)..."></textarea>
-                            </div>
                         </div>
                     </div>
                 </div>
             `;
             $('#answersContainer').append(newAnswer);
             answerCount++;
+            // Validate lại tất cả answer-item sau khi thêm
+            $('.answer-item').each(function() {
+                validateAnswer($(this));
+            });
+            console.log('[addAnswer] Sau khi thêm, tổng số answer-item:', $('.answer-item').length);
         });
 
         $(document).on('click', '.remove-answer', function() {
+            const idx = $(this).closest('.answer-item').index();
+            console.log('[remove-answer] Xoá answer-item index:', idx);
             $(this).closest('.answer-item').remove();
             updateAnswerNumbers();
+            console.log('[remove-answer] Sau khi xoá, tổng số answer-item:', $('.answer-item').length);
         });
 
         // Add form submit handler to log data
@@ -201,6 +232,14 @@
                 }
             }
 
+            // Log dữ liệu form từng bước
+            console.log('[submit] Dữ liệu formData:', data);
+            if (data.answers) {
+                data.answers.forEach((ans, idx) => {
+                    console.log(`[submit] Answer #${idx + 1}:`, ans);
+                });
+            }
+
             // Validate required fields
             let isValid = true;
             let errorMessage = '';
@@ -223,20 +262,68 @@
                     if (!answer.noiDung || !answer.diem) {
                         isValid = false;
                         errorMessage = `Vui lòng điền đầy đủ thông tin cho câu trả lời #${index + 1}`;
+                        console.log(`[submit] Answer #${index + 1} không hợp lệ:`, answer);
+                    } else {
+                        console.log(`[submit] Answer #${index + 1} hợp lệ:`, answer);
                     }
                 });
             }
 
             if (!isValid) {
-                alert(errorMessage);
+                showNotification(`<i class="fas fa-exclamation-triangle"></i> <strong>Lỗi validation:</strong> ${errorMessage}`, 'warning');
                 return;
             }
 
             // Log the data
             console.log('Form data to be submitted:', data);
             
-            // Submit the form
-            this.submit();
+            // Show loading state
+            const submitBtn = $(this).find('button[type="submit"]');
+            const originalText = submitBtn.text();
+            submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang lưu...');
+            
+            // Call API to create answers
+            callApi({
+                url: '/admin/cau-tra-loi/create',
+                method: 'POST',
+                params: data
+            })
+            .then(function(response) {
+                console.log('API Response:', response.data);
+                
+                if (response.data.success) {
+                    // Show success message with Swal and redirect after user confirms
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        html: `Đã thêm <b>${response.data.data.answersCount}</b> câu trả lời cho câu hỏi ID: <b>${response.data.data.cauHoiId}</b>`,
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    }).then(() => {
+                        window.location.href = '/admin/cau-tra-loi';
+                    });
+                } else {
+                    // Show error message
+                    showNotification(`<i class="fas fa-exclamation-triangle"></i> <strong>Lỗi:</strong> ${response.data.message || 'Có lỗi xảy ra khi thêm câu trả lời'}`, 'danger');
+                }
+            })
+            .catch(function(error) {
+                console.error('API Error:', error);
+                let errorMessage = 'Có lỗi xảy ra khi thêm câu trả lời';
+                
+                if (error.response && error.response.data) {
+                    errorMessage = error.response.data.message || errorMessage;
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                
+                showNotification(`<i class="fas fa-exclamation-triangle"></i> <strong>Lỗi:</strong> ${errorMessage}`, 'danger');
+            })
+            .finally(function() {
+                // Reset button state
+                submitBtn.prop('disabled', false).html(originalText);
+            });
         });
     });
 </script> 

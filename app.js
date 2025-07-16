@@ -61,6 +61,27 @@ const hbs = exphbs.create({
                 accum += block.fn(i);
             }
             return accum;
+        },
+        isActive: function(currentPath, expectedPath) {
+            return currentPath === expectedPath ? 'active' : '';
+        },
+        isOpen: function(currentPath, expectedPath) {
+            return currentPath === expectedPath ? 'menu-is-opening menu-open' : '';
+        },
+        navClass: function(currentPath, ...args) {
+            // args: [expectedPath1, expectedPath2, ..., options]
+            const options = args.pop();
+            let result = [];
+            for (const expectedPath of args) {
+                if (currentPath === expectedPath) {
+                    result.push('active');
+                }
+                if (currentPath.startsWith(expectedPath)) {
+                    result.push('menu-is-opening menu-open');
+                }
+            }
+            // Loại bỏ trùng lặp
+            return Array.from(new Set(result)).join(' ');
         }
     }
 });

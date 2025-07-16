@@ -1,93 +1,137 @@
-{{> admin/header}}
-
-<div class="container-fluid">
-    <div class="row">
-        {{> admin/sidebar}}
-        
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Chỉnh sửa Câu hỏi</h1>
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Chỉnh sửa Câu hỏi</h1>
             </div>
-
-            <form action="/admin/cau-hoi/sua/{{cauHoi._id}}" method="POST">
-                <div class="mb-3">
-                    <label for="content" class="form-label">Nội dung câu hỏi</label>
-                    <textarea class="form-control" id="content" name="content" rows="3" required>{{cauHoi.content}}</textarea>
+            <div class="col-sm-6">
+                <div class="float-sm-right">
+                    <a href="/admin/cau-hoi" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </a>
                 </div>
-
-                <div class="mb-3">
-                    <label for="type" class="form-label">Loại câu hỏi</label>
-                    <select class="form-select" id="type" name="type" required>
-                        <option value="">Chọn loại câu hỏi</option>
-                        <option value="single" {{#if (eq cauHoi.type 'single')}}selected{{/if}}>Câu hỏi đơn</option>
-                        <option value="multiple" {{#if (eq cauHoi.type 'multiple')}}selected{{/if}}>Câu hỏi nhiều lựa chọn</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="difficulty" class="form-label">Độ khó</label>
-                    <select class="form-select" id="difficulty" name="difficulty" required>
-                        <option value="">Chọn độ khó</option>
-                        <option value="easy" {{#if (eq cauHoi.difficulty 'easy')}}selected{{/if}}>Dễ</option>
-                        <option value="medium" {{#if (eq cauHoi.difficulty 'medium')}}selected{{/if}}>Trung bình</option>
-                        <option value="hard" {{#if (eq cauHoi.difficulty 'hard')}}selected{{/if}}>Khó</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="nganhId" class="form-label">Ngành</label>
-                    <select class="form-select" id="nganhId" name="nganhId" required>
-                        <option value="">Chọn ngành</option>
-                        {{#each nganhs}}
-                        <option value="{{this._id}}" {{#if (eq this._id ../cauHoi.nganhId)}}selected{{/if}}>{{this.tenNganh}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Các lựa chọn</label>
-                    <div id="options-container">
-                        {{#each cauHoi.options}}
-                        <div class="option-item mb-2">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="options[]" value="{{this}}" required>
-                                <div class="input-group-text">
-                                    <input type="radio" name="correctAnswer" value="{{@index}}" {{#if (eq @index ../cauHoi.correctAnswer)}}checked{{/if}} required>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                    </div>
-                    <button type="button" class="btn btn-secondary mt-2" onclick="addOption()">Thêm lựa chọn</button>
-                </div>
-
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Lưu</button>
-                    <a href="/admin/cau-hoi" class="btn btn-secondary">Hủy</a>
-                </div>
-            </form>
-        </main>
+            </div>
+        </div>
     </div>
 </div>
 
-<script>
-let optionCount = {{cauHoi.options.length}};
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thông tin câu hỏi</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form action="/admin/cau-hoi/edit/{{cauHoi._id}}" method="POST" id="editForm">
+                            <div class="form-group">
+                                <label for="content">Nội dung câu hỏi <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="content" name="cau_hoi" rows="3" required>{{cauHoi.cau_hoi}}</textarea>
+                            </div>
 
-function addOption() {
-    const container = document.getElementById('options-container');
-    const newOption = document.createElement('div');
-    newOption.className = 'option-item mb-2';
-    newOption.innerHTML = `
-        <div class="input-group">
-            <input type="text" class="form-control" name="options[]" placeholder="Nhập lựa chọn" required>
-            <div class="input-group-text">
-                <input type="radio" name="correctAnswer" value="${optionCount}" required>
+                            <div class="form-group">
+                                <label for="type">Loại câu hỏi <span class="text-danger">*</span></label>
+                                <select class="form-control select2" id="type" name="loai_cau_hoi" required>
+                                    <option value="">Chọn loại câu hỏi</option>
+                                    {{#each loaiCauHois}}
+                                    <option value="{{this.id}}" {{#if (eq this.id ../cauHoi.loai_cau_hoi)}}selected{{/if}}>{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="difficulty">Nhóm ngành <span class="text-danger">*</span></label>
+                                <select class="form-control select2" id="difficulty" name="nhom_nganh_id" required>
+                                    <option value="">Chọn nhóm ngành</option>
+                                    {{#each nganhs}}
+                                    <option value="{{this.id}}" {{#if (eq this.id ../cauHoi.nhom_nganh_id)}}selected{{/if}}>{{this.ten}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Lưu thay đổi
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
             </div>
         </div>
-    `;
-    container.appendChild(newOption);
-    optionCount++;
-}
-</script>
+    </div>
+</section>
 
-{{> admin/footer}} 
+<!-- Add Select2 CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="/js/rest_api.js"></script>
+<script>
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('editForm');
+    
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        try {
+            const formData = new FormData(form);
+            const data = {
+                cau_hoi: formData.get('cau_hoi'),
+                loai_cau_hoi: formData.get('loai_cau_hoi'),
+                nhom_nganh_id: formData.get('nhom_nganh_id')
+            };
+
+            const response = await callApi({
+                url: '/admin/cau-hoi/sua/{{cauHoi.id}}',
+                params: data,
+                method: 'POST'
+            });
+
+            const result = response.data;
+
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: result.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    window.location.href = '/admin/cau-hoi';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: result.message
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Có lỗi xảy ra khi cập nhật thông tin câu hỏi'
+            });
+        }
+    });
+});
+
+$(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Tìm kiếm...",
+        allowClear: true,
+        language: {
+            noResults: function() {
+                return "Không tìm thấy kết quả";
+            }
+        }
+    });
+});
+</script> 

@@ -1,5 +1,5 @@
 const { pool } = require('../config/db');
-
+const { LOAI_CAU_HOI } = require('../constants');
 const cauHoiController = {
     // Hiển thị danh sách câu hỏi
     index: async (req, res) => {
@@ -37,10 +37,11 @@ const cauHoiController = {
     showCreateForm: async (req, res) => {
         try {
             // Lấy danh sách chuyên ngành
-            const [chuyenNganhs] = await pool.query('SELECT * FROM chuyen_nganh');
-            
+            const [nganhs] = await pool.query('SELECT * FROM nhom_nganh');
+            const loaiCauHois = LOAI_CAU_HOI;
             res.render('admin/cau-hoi/them-moi', {
-                chuyenNganhs
+                nganhs,
+                loaiCauHois
             });
         } catch (error) {
             console.error('Error:', error);
@@ -53,7 +54,7 @@ const cauHoiController = {
     // Xử lý tạo câu hỏi mới
     create: async (req, res) => {
         try {
-            const { cau_hoi, loai_cau_hoi, nhom_nganh_id, tags, trang_thai } = req.body;
+            const { cau_hoi, loai_cau_hoi, nhom_nganh_id, status } = req.body;
             
             // Kiểm tra dữ liệu đầu vào
             const missingFields = [];
@@ -79,7 +80,7 @@ const cauHoiController = {
                     cau_hoi,
                     loai_cau_hoi,
                     nhom_nganh_id,
-                    trang_thai ? 1 : 0,
+                    status,
                     currentTime
                 ]
             );

@@ -6,10 +6,9 @@ const cauTraLoiController = {
         try {
             // Lấy danh sách câu hỏi từ database
             const [cauHois] = await pool.query(`
-                SELECT ma_cau_hoi as id, noi_dung
+                SELECT id as id, cau_hoi
                 FROM cau_hoi
-                WHERE trang_thai = 1
-                ORDER BY ngay_cap_nhat DESC
+                ORDER BY created_at DESC
             `);
             
             console.log('SQL Query Result:', cauHois);
@@ -63,21 +62,41 @@ const cauTraLoiController = {
             // Thêm các câu trả lời vào database
             for (const answer of answers) {
                 await pool.query(
-                    'INSERT INTO cau_tra_loi (ma_cau_tra_loi, ma_cau_hoi, noi_dung, diem, ghi_chu, ngay_cap_nhat) VALUES (?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO cau_tra_loi (id_cau_hoi, cau_tra_loi, diem, created_at) VALUES (?, ?, ?, ?)',
                     [
-                        `CTL${Date.now()}`,
                         cauHoiId,
                         answer.noiDung,
                         answer.diem,
-                        answer.ghiChu || null,
                         currentTime
                     ]
                 );
             }
 
+            // Kiểm tra nếu request là AJAX/API call
+            if (req.xhr || req.headers.accept && req.headers.accept.indexOf('application/json') !== -1) {
+                return res.json({
+                    success: true,
+                    message: 'Thêm câu trả lời thành công',
+                    data: {
+                        cauHoiId,
+                        answersCount: answers.length
+                    }
+                });
+            }
+
+            // Nếu là form submit thông thường
             res.redirect('/admin/cau-tra-loi');
         } catch (error) {
             console.error('Error:', error);
+            
+            // Kiểm tra nếu request là AJAX/API call
+            if (req.xhr || req.headers.accept && req.headers.accept.indexOf('application/json') !== -1) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Có lỗi xảy ra khi thêm câu trả lời'
+                });
+            }
+            
             res.status(500).render('error', {
                 message: 'Có lỗi xảy ra khi thêm câu trả lời'
             });

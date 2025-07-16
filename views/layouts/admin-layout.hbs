@@ -143,8 +143,8 @@
                                 <p>Tổng quan</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        <li class="nav-item {{navClass path '/admin/nganh' '/admin/chuyen-nganh'}}">
+                            <a href="#" class="nav-link {{navClass path '/admin/nganh' '/admin/chuyen-nganh'}}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Ngành nghề
@@ -152,22 +152,22 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="/admin/nganh" class="nav-link">
+                                <li class="nav-item {{isActive path '/admin/nganh'}}">
+                                    <a href="/admin/nganh" class="nav-link {{isActive path '/admin/nganh'}}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Ngành</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="/admin/chuyen-nganh" class="nav-link">
+                                <li class="nav-item {{isActive path '/admin/chuyen-nganh'}}">
+                                    <a href="/admin/chuyen-nganh" class="nav-link {{isActive path '/admin/chuyen-nganh'}}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Chuyên ngành</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        <li class="nav-item {{navClass path '/admin/cau-hoi' '/admin/cau-tra-loi'}}">
+                            <a href="#" class="nav-link {{isActive path '/admin/cau-hoi'}} {{isActive path '/admin/cau-tra-loi'}}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Trắc nghiệm
@@ -175,14 +175,14 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="/admin/cau-hoi" class="nav-link">
+                                <li class="nav-item {{isActive path '/admin/cau-hoi'}}">
+                                    <a href="/admin/cau-hoi" class="nav-link {{isActive path '/admin/cau-hoi'}}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Câu hỏi</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="/admin/cau-tra-loi" class="nav-link">
+                                <li class="nav-item {{isActive path '/admin/cau-tra-loi'}}">
+                                    <a href="/admin/cau-tra-loi" class="nav-link {{isActive path '/admin/cau-tra-loi'}}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Đáp án</p>
                                     </a>

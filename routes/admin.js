@@ -7,6 +7,7 @@ const cauHoiService = require('../services/cauHoiService');
 const cauHoiController = require('../controllers/cauHoiController');
 const cauTraLoiService = require('../services/cauTraLoiService');
 const cauTraLoiController = require('../controllers/cauTraLoiController');
+const { LOAI_CAU_HOI } = require('../constants');
 
 // Admin dashboard
 router.get('/', async (req, res) => {
@@ -378,11 +379,13 @@ router.get('/cau-hoi/sua/:id', isAdmin, async (req, res) => {
             req.flash('error', 'Không tìm thấy câu hỏi');
             return res.redirect('/admin/cau-hoi');
         }
+        const loaiCauHois = LOAI_CAU_HOI;
         res.render('admin/cau-hoi/edit', {
             title: 'Chỉnh sửa Câu hỏi',
             path: '/admin/cau-hoi',
             cauHoi,
-            nganhs
+            nganhs,
+            loaiCauHois
         });
     } catch (error) {
         console.error('Error fetching cau hoi:', error);
@@ -395,19 +398,26 @@ router.post('/cau-hoi/sua/:id', isAdmin, async (req, res) => {
     try {
         const success = await cauHoiService.updateCauHoi(req.params.id, req.body);
         if (success) {
-            req.flash('success', 'Cập nhật câu hỏi thành công');
+            res.json({
+                success: true,
+                message: 'Cập nhật câu hỏi thành công'
+            });
         } else {
-            req.flash('error', 'Không tìm thấy câu hỏi để cập nhật');
+            res.status(404).json({
+                success: false,
+                message: 'Không tìm thấy câu hỏi để cập nhật'
+            });
         }
-        res.redirect('/admin/cau-hoi');
     } catch (error) {
         console.error('Error updating cau hoi:', error);
-        req.flash('error', 'Có lỗi xảy ra khi cập nhật câu hỏi');
-        res.redirect(`/admin/cau-hoi/sua/${req.params.id}`);
+        res.status(500).json({
+            success: false,
+            message: 'Có lỗi xảy ra khi cập nhật câu hỏi'
+        });
     }
 });
 
-router.delete('/cau-hoi/xoa/:id', isAdmin, async (req, res) => {
+router.post('/cau-hoi/xoa/:id', isAdmin, async (req, res) => {
     try {
         const success = await cauHoiService.deleteCauHoi(req.params.id);
         if (success) {
@@ -423,21 +433,39 @@ router.delete('/cau-hoi/xoa/:id', isAdmin, async (req, res) => {
         }
     } catch (error) {
         console.error('Error deleting cau hoi:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Có lỗi xảy ra khi xóa câu hỏi'
-        });
+        if (error.code === 'CAU_HOI_HAS_CAU_TRA_LOI') {
+            res.status(200).json({
+                success: false,
+                message: error.message,
+                cauTraLoiCount: error.cauTraLoiCount
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                message: 'Có lỗi xảy ra khi xóa câu hỏi'
+            });
+        }
     }
 });
 
 // Câu trả lời routes
 router.get('/cau-tra-loi', isAdmin, async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
         const cauTraLois = await cauTraLoiService.getAllCauTraLoi();
+        const total = cauTraLois.length; // hoặc await cauTraLoiService.countCauTraLoi();
+
         res.render('admin/cau-tra-loi/index', {
             title: 'Quản lý Câu trả lời',
             path: '/admin/cau-tra-loi',
-            cauTraLois
+            cauTraLois: cauTraLois.slice((page-1)*limit, page*limit),
+            pagination: {
+                currentPage: page,
+                totalPages: Math.ceil(total / limit),
+                total: total,
+                limit: limit
+            }
         });
     } catch (error) {
         console.error('Error fetching cau tra loi:', error);

@@ -90,7 +90,10 @@ function deleteItem(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             fetch('<%= deleteUrl %>/' + id, {
-                method: 'DELETE',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             })
             .then(response => response.json())
             .then(data => {
@@ -103,9 +106,17 @@ function deleteItem(id) {
                         window.location.reload();
                     });
                 } else {
+                    // Hiển thị thông báo lỗi cụ thể
+                    let errorMessage = data.message || 'Có lỗi xảy ra khi xóa dữ liệu.';
+                    
+                    // Nếu có thông tin về số lượng câu trả lời, hiển thị thêm
+                    if (data.cauTraLoiCount) {
+                        errorMessage += ` (Có ${data.cauTraLoiCount} câu trả lời liên quan)`;
+                    }
+                    
                     Swal.fire(
                         'Lỗi!',
-                        'Có lỗi xảy ra khi xóa dữ liệu.',
+                        errorMessage,
                         'error'
                     );
                 }
